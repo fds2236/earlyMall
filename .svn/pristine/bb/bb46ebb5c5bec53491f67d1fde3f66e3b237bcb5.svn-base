@@ -1,0 +1,108 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+   pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>주문관리</title>
+</head>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+<!-- jqGrid CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+<!-- The actual JQuery code -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
+<!-- The JQuery UI code -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" /></script>
+<!-- The jqGrid language file code-->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js" /></script>
+<!-- The atual jqGrid code -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js" /></script>
+
+<body>
+<h1>관리자 주문관리</h1>
+      <div class="container">
+         <form id="searchForm">
+            <table>
+               <tr>
+                  <td>회원명</td>
+                  <td><input type="text" name="m_id"></td>
+                  <td>상품명</td>
+                  <td><input type="text" name="g_id"></td>
+                  <td>주문일자</td>
+                  <td><input type="date" name="o_dt"></td>
+                  <td>주문단계</td>
+                  <td><select name="o_step">
+                     <option value="전체">전체</option>
+                     <option value="결제대기">결제대기</option>
+                     <option value="결제완료">결제완료</option>
+                     <option value="배송중">배송중</option>
+                     <option value="배송완료">배송완료</option>
+                  </select>&nbsp;<button>조회</button></td>                  
+               </tr>               
+            </table>            
+         </form>
+      </div><br>
+     
+      <table id="orderManage"></table>
+      <div id="pager"></div>
+   </body>
+
+<script type="text/javascript">   
+        $(document).ready(function() {
+        	
+        	var searchResultColNames = ['회원아이디','회원명', '상품명', '주문일자', '주문수량', '주문금액', '주문단계', '배송완료일자'];
+            var searchResultColModel = [    	
+                	{name: 'M_ID', index: 'M_ID', width: 100, align: 'center', sortable: false},
+                    {name: 'M_NAME', index: 'M_NAME', width: 100, align: 'center'},
+                    {name: 'G_ID', index: 'G_ID', width: 100, align: 'center'},
+                    {name: 'O_DT', index: 'O_DT', width: 100, align: 'center'},
+                    {name: 'O_QTY', index: 'O_QTY', width: 100, align: 'center'},
+                    {name: 'O_PRICE', index: 'O_PRICE', width: 100, align: 'center'},
+                    {name: 'O_STEP', index: 'O_STEP', width: 100, align: 'center',
+                    	formatter: function(cellValue, options, rowObject) {
+                    		if(cellValue === '10') {
+                    			return '결제대기';
+                    		} else if (cellValue === '20') {
+                    			return '결제완료';
+                    		} else if (cellValue === '30') {
+                    			return '배송중';
+                    		} else {
+                    			return '배송완료';
+                    		}
+                    	}
+                    },
+                    {name: 'O_COMP', index: 'O_COMP', width: 100, align: 'center'}
+                    ];
+            
+            $("#orderManage").jqGrid({
+            	url: "/admin/orderMg",
+                datatype: "json",
+                mtype: "GET", 
+                height: 260,
+                width: 1020,
+                colNames: searchResultColNames,
+                colModel: searchResultColModel,
+                rowNum : 10,
+                rowList: [10,20,30],
+                pager: "#pager",
+               
+              
+                jsonReader: {
+                	repeatitems: false,
+                	root:"dataList",
+                },
+                loadonce: true,
+                rownumbers: true,
+                viewecords: true,
+                caption:"주문관리",
+                loadComplete: function(data) {
+                	console.log("데이터", data.dataList)
+                }               
+            });
+        });
+
+    </script>
+
+
+</html>

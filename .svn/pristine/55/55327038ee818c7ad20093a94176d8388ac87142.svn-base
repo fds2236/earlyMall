@@ -1,0 +1,74 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- swiper 라이브러리-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+<style>
+.swiper {
+  border: solid 4px orange;
+  width: 1024px;
+  height: 400px;
+  margin-bottom:100px;
+  position: relative;
+}
+
+.swiper-slide{
+	background-color:violet;
+	text-align:center;
+}
+
+.swiper-slide img{
+	margin-top:20px;
+	width:200px;
+	height:180px;
+}
+.swiper-button-prev, .swiper-button-next {
+    position: absolute; /* 버튼들의 위치를 설정하기 위해 절대 위치로 설정 */
+    top: 50%; /* 컨테이너의 중앙에 위치하도록 설정 */
+    transform: translateY(-50%); /* 세로 중앙 정렬 */
+    z-index: 10; /* 버튼들을 슬라이드 위에 표시하기 위해 겹침 순서를 설정 */
+    background-color: rgba(255, 255, 255, 0.5); /* 버튼 배경 색상 설정 */
+    padding: 10px; /* 버튼 패딩 설정 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  }
+</style>
+
+<script type="text/javascript">
+	window.addEventListener("load", function() {
+		const swiper = new Swiper('.swiper', {
+			  loop: true,
+			  slidesPerView : 3,
+			  autoplay: {
+	 				delay: 1000,
+	 				pauseOnMouseEnter: true,
+	 			},  		  
+			  pagination: {
+			    el: '.swiper-pagination',
+			    clickable: true
+			  },
+			  navigation: {
+			    nextEl: '.swiper-button-next',
+			    prevEl: '.swiper-button-prev',
+			  }
+			});
+	});
+</script>
+
+<!-- Slider main container -->
+<div class="swiper">
+  <div><h1>컨테이너1</h1></div>
+  <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+    <!-- Slides -->
+    <div class="swiper-slide" style="background-color: red;"><img src="/img/애플워치메인.jpg"><h2>애플워치</h2><p>10000원</p></div>
+    <div class="swiper-slide" style="background-color: orange;"><img src="/img/에어컨메인.jpg"><h2>에어컨메인</h2><p>10000원</p></div>
+    <div class="swiper-slide" style="background-color: yellow;"><img src="/img/버즈프로2.jpg"><h2>버즈프로2</h2><p>10000원</p></div>
+    <div class="swiper-slide" style="background-color: green;"><img src="/img/아이폰14프로.jpg"><h2>아이폰14프로</h2><p>10000원</p></div>
+    <div class="swiper-slide" style="background-color: blue;"><img src="/img/최고심부적.jpeg"><h2>최고심부적</h2><p>10000원</p></div>
+ 	<div class="swiper-slide" style="background-color: red;"><img src="/img/애플워치메인.jpg"><h2>애플워치</h2><p>10000원</p></div>
+  </div>
+  
+  <div class="swiper-pagination"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</div>

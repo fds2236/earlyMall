@@ -1,0 +1,21 @@
+package com.eansoft.mall.goods.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
+public interface GoodsDao {
+	//int countBasket(String m_id);
+	//List<Map<String, Object>> basketList(@Param("m_id") String m_id, @Param("searchType") String searchType, @Param("page") int page, @Param("amount") int amount);
+	List<Map<String, Object>> basketList(@Param("m_id") String m_id); // 장바구니 리스트 조회
+	String basketCheck(@Param("m_id") String m_id, @Param("g_id") String g_id); // 장바구니 체크
+	public int basketAdd(Map<String, Object> map); 
+	int basketQtyUpdate(@Param("m_id") String m_id, @Param("g_id") String g_id, @Param("sign") String sign); // 장바구니 수량 업데이트
+	public int basketDel(@Param("m_id") String m_id, @Param("g_id") String g_id); // 장바구니 삭제 
+	
+}

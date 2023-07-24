@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.goods.dao.GoodsDao">
+<!--	<select id="countBasket" resultType="int">-->
+<!--	select count(*) from basket where m_id = #{param}-->
+<!--	</select>-->
+	
+<!--	<select id="basketList" resultType="java.util.Map">-->
+<!--		SELECT *-->
+<!--		FROM (-->
+<!--		    SELECT rownum AS rn, sub.*-->
+<!--		    FROM (-->
+<!--		        SELECT b.b_qty, b.g_id, g.g_name, g.g_price, g.g_img, g.g_qty-->
+<!--		        FROM basket b-->
+<!--		        JOIN goods g ON b.g_id = g.g_id-->
+<!--		        WHERE b.m_id = #{m_id}-->
+<!--		        ORDER BY-->
+<!--		        <choose>-->
+<!--					<when test="searchType == 'highPrice'">-->
+<!--						g.g_price desc-->
+<!--					</when>-->
+<!--					<when test="searchType == 'lowPrice'">-->
+<!--						g.g_price-->
+<!--					</when>-->
+<!--					<when test="searchType == 'latestReg'">-->
+<!--						b.reg_dt desc-->
+<!--					</when>-->
+<!--				</choose>		       -->
+<!--		    ) sub-->
+<!--		)-->
+<!--		WHERE rn > (#{page}-1) * #{amount} AND rn <![CDATA[ <=]]> #{page} * #{amount}-->
+<!--	</select>-->
+	
+		<select id="basketList" resultType="Map">
+	        SELECT b.b_qty, b.g_id, g.g_name, g.g_price, g.g_img, g.g_qty
+	        FROM basket b
+	        JOIN goods g ON b.g_id = g.g_id
+	        WHERE b.m_id = #{m_id}
+		</select>
+		
+		<select id="basketCheck" resultType="String">
+			select m_id, g_id from basket where m_id=#{m_id} and g_id=#{g_id}
+		</select>
+	
+		<insert id="basketAdd" parameterType="hashmap">
+			insert into basket values(#{m_id}, #{g_id}, #{b_qty}, sysdate)
+		</insert>
+		
+		<update id="basketQtyUpdate">
+			update basket set
+			<if test="sign == 'plus'">
+			b_qty = b_qty +1,
+			</if>
+			<if test="sign == 'minus'">
+			b_qty = b_qty -1,
+			</if>
+			reg_dt = sysdate
+			where m_id = #{m_id} and g_id = #{g_id}
+		</update>
+		
+		<delete id="basketDel">
+			delete 
+			from basket 
+			where m_id = #{m_id}
+			<if test="g_id != null and !''.equals(g_id)">
+			and g_id = #{g_id}
+			</if>
+		</delete>
+	
+	
+	
+</mapper>

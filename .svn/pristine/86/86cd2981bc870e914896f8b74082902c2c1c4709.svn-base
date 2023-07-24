@@ -1,0 +1,59 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.5/css/ui.jqgrid.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.5/jquery.jqgrid.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // JqGrid 초기화 및 데이터 로드
+            $("#cartList").jqGrid({
+                url: "/goods/basketList?mId=" + '${memberInfo.mId}' + "&searchType=" + 'highPrice' + "&page=" + 1 + "&amount=" + 5,
+                 datatype: "json",
+                colNames: ["상품사진", "상품명", "가격", "수량"],
+                colModel: [
+                    { name: "G_IMG", index: "productId", width: 100 },
+                    { name: "G_NAME", index: "productName", width: 200 },
+                    { name: "G_PRICE", index: "price", width: 100 },
+                    { name: "B_QTY", index: "quantity", width: 100 }
+                ],
+                pager: "#pager",
+                rowNum: 5,
+                rowList: [5, 10, 20],
+                height: "auto",
+                autowidth: true,
+                viewrecords: true,
+                caption: "장바구니",
+                jsonReader: {
+                    repeatitems: false,
+                    root: "dataList",
+                    page: function(obj) {
+                        return 1;
+                    },
+                    total: function(obj) {
+                        return obj.totalPages;
+                    },
+                    records: function(obj) {
+                        return obj.totalRecords;
+                    }
+                },
+                loadonce: true,
+                loadComplete: function(data) {
+                    console.log("넘어오거라!!!!!!!!!!!!!!!!:", data.dataList);
+                    $(this).trigger("reloadGrid");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>장바구니 페이지</h1>
+    로그인한 사람 : ${memberInfo.mId}
+    <table id="cartList"></table>
+    <div id="pager"></div>
+</body>
+</html>

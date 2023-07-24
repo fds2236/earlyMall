@@ -1,0 +1,180 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+   pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>주문관리</title>
+</head>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+<!-- jqGrid CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+<!-- The actual JQuery code -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
+<!-- The JQuery UI code -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" /></script>
+<!-- The jqGrid language file code-->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js" /></script>
+<!-- The atual jqGrid code -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js" /></script>
+
+<body>
+<h1>관리자 주문관리</h1>
+      <div class="container">
+         <form id="searchForm">    
+                  회원명
+                  <input type="text" name="mName" id="mName">
+                  상품명
+                  <input type="text" name="gName" id="gName">
+                  주문일자
+                  <input type="date" name="oDt" id="oDt">
+                  주문단계
+                  <select class="select" id="oStep" name="oStep">
+                     <option value="">전체</option>
+                     <option value="10">결제대기</option>
+                     <option value="20">결제완료</option>
+                     <option value="30">배송중</option>
+                     <option value="40">배송완료</option>
+                  </select>&nbsp;<button type="submit">조회</button>                                   
+         </form>
+      </div><br>
+     
+      <table id="orderManage"></table>
+      <div id="pager"></div><br>
+            	<button id="updateButton" type="button" onclick="">저장</button>
+   </body>
+
+<script type="text/javascript">   
+        $(document).ready(function() {
+        	
+        	var searchResultColNames = ['회원아이디','회원명', '상품명', '주문일자', '주문수량', '주문금액', '주문단계', '배송완료일자'];
+            var searchResultColModel = [    	
+                	{name: 'M_ID', index: 'M_ID', width: 100, align: 'center'},
+                    {name: 'M_NAME', index: 'M_NAME', width: 100, align: 'center'},
+                    {name: 'G_NAME', index: 'G_NAME', width: 100, align: 'center'},
+                    {name: 'O_DT', index: 'O_DT', width: 100, align: 'center', formatter: formatDate},
+                    {name: 'O_QTY', index: 'O_QTY', width: 100, align: 'center'},
+                    {name: 'O_PRICE', index: 'O_PRICE', width: 100, align: 'center', sortable: true, sorttype: 'number'},
+                    {
+                        name: 'O_STEP',
+                        index: 'O_STEP',
+                        width: 100,
+                        align: 'center',
+                        editable: true,
+                        cellEdit: true,
+                        edittype: 'select',
+                        editoptions: {
+                        	
+                          value: '10:결제대기;20:결제완료;30:배송중;40:배송완료',                       
+                        },
+                        formatter: 'select',
+                      },  
+    
+                    {name: 'O_COMP', index: 'O_COMP', width: 100, align: 'center', 
+                    	  formatter: function(cellValue, options, rowObject) {
+                    		  if(cellValue) {
+                    			  return formatDate(cellValue)
+                    		  }
+                    		  return ''; // 배송일자가 있을경우에만 변환하도록 옵션
+                    	  }}
+                    ];
+            
+            $("#orderManage").jqGrid({
+            	url: "/admin/orderMg",
+                datatype: "json",
+                mtype: "GET", 
+                height: 260,
+                width: 1020,
+                colNames: searchResultColNames,
+                colModel: searchResultColModel,
+                rowNum : 10,
+                rowList: [10,20,30],
+                pager: "#pager",
+ 	            jsonReader: {
+                	repeatitems: false,
+                	root:"dataList",
+                },
+                loadonce: true,
+                rownumbers: true,
+                viewecords: true,
+                caption:"주문관리",               
+                
+                loadComplete: function(data) {
+                	console.log("데이터", data.dataList);              
+                	
+                	$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
+                	$("#orderManage_nodata").remove();
+                	if(data && data.dataList && data.dataList.length === 0) {
+                		$("#orderManage.ui-jqgrid-btable").after("<p id='orderManage_nodata' style='margin-top: 15px; text-align: center; font-weight:bold;'>검색된 자료가 없습니다</p>");
+                	}
+                	
+                }               
+            });
+        });
+	     // 주문일자 오늘로 지정
+    	document.getElementById('oDt').value = new Date().toISOString().substring(0,10);
+        
+        // 날짜 변환
+        function formatDate(cellValue, options, rowObject) {
+        	var date = new Date(cellValue);
+        	var formattedDate = date.toLocaleString('ko-KR', { year: 'numeric', month:'2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'});
+        	return formattedDate;
+        }
+
+        $("#searchForm").submit(function(event) {
+        	event.preventDefault();
+        	
+        	var mName = $("#mName").val();
+        	var gName = $("#gName").val();
+        	var oDt = $("#oDt").val();
+        	var oStep = $("#oStep").val();
+        	
+            // Ajax를 사용하여 서버로 데이터 전송
+            $.ajax({
+              url: "/admin/orderMg",
+              type: "GET",
+              dataType: "json",
+              data: {
+                mName: mName,
+    			gName: gName,
+    			oDt: oDt,
+    			oStep: oStep
+              },
+              success: function(response) {
+                // 그리드 재로드
+                $("#orderManage").jqGrid("clearGridData")
+                               .jqGrid("setGridParam", {
+                                 datatype: "json",
+                                 page: 1,
+                                 postData: {
+                                    mName: mName,
+                         			gName: gName,
+                         			oDt: oDt,
+                         			oStep: oStep
+                                 },
+                                 jsonReader: {
+                                   repeatitems: false,
+                                   root: "dataList",
+                                   page: function(obj) {
+                                       return 1;
+    	               	            },
+    	               	            total: function(obj) {
+    	               	              return obj.totalPages;
+    	               	            },
+    	               	            records: function(obj) {
+    	               	              return obj.totalRecords;
+    	               	            }
+    	               	          }
+    	               	        })
+                               .trigger("reloadGrid");
+              },
+              error: function(error) {
+                console.log("Error:", error);
+              }
+            });
+          });
+    </script>
+
+
+</html>

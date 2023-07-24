@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="screen" href="../resources/css/jquery-ui-1.10.4.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="../resources/css/ui.jqgrid.css" />
+    <script type="text/javascript" src="resources/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="resources/js/grid.locale-en.js"></script>
+    <script type="text/javascript" src="resources/js/jquery.jqGrid.min.js"></script>
+	
+	<style>
+	
+	</style>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#list").jqGrid({          
+                url:"/admin/adminOrderManage", //ajax 요청주소
+                datatype:"json", //결과물 받을 데이터 타입
+                caption:"list",
+                mtype : "POST",
+                height:"auto",
+                rowNum:10,
+                colNames:["O_ID","M_ID","G_ID", "O_DT", "O_QTY", "O_PRICE", "O_STEP", "O_COMP"],
+                colModel:[
+                          {name:"주문번호", index:"O_ID", align:"center"},
+                          {name:"회원명", index:"M_ID", align:"center", editable:true, edittype:"text"},
+                          {name:"상품명", index:"G_ID", align:"center", editable:true, edittype:"text"}
+                          {name:"주문일자", index:"O_DT", align:"center", editable:true, edittype:"text"}
+                          {name:"주문수량", index:"O_QTY", align:"center", editable:true, edittype:"text"}
+                          {name:"주문금액", index:"O_PRICE", align:"center", editable:true, edittype:"text"}
+                          {name:"주문단계", index:"O_STEP", align:"center", editable:true, edittype:"text"}
+                          {name:"배송완료일자", index:"O_COMP", align:"center", editable:true, edittype:"text"}
+                         ],
+                viewrecords:true 
+            });
+        });
+    </script>
+</html>

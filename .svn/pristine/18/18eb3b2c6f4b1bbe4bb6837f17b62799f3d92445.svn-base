@@ -1,0 +1,40 @@
+package com.eansoft.mall.order.controller;
+
+import java.util.Map;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping("/order")
+public class OrderController {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/mine")
+	public String cateMain() {
+		return "order/myOrder";
+	}
+	
+	@GetMapping("/goOrderPage")
+	public String orderPage(
+			@RequestParam Map<String, Object> map, Model model) {
+	    logger.info("map : "+ map);
+		model.addAttribute("orderInfo", map);
+		logger.info("model : "+ model);
+		return "order/orderPage";
+	}
+	
+	
+	
+	
+	
+}

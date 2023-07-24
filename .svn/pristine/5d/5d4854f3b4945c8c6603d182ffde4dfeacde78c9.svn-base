@@ -1,0 +1,52 @@
+package com.eansoft.mall.main.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.eansoft.mall.main.service.MainService;
+
+@Controller
+public class MainController {
+	@Autowired
+	MainService mainService;
+
+	@GetMapping("/")
+	public String main() {
+		return "main";
+	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
+	@GetMapping("/admin-cate")
+	@ResponseBody
+	public Map<String, Object> adminCate() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> cateList = mainService.getAdminCate();
+		map.put("result", "SUCCESS");
+		map.put("cateList", cateList);
+		
+		return map;
+	}
+	
+	@GetMapping("/goods-cate")
+	@ResponseBody
+	public Map<String, Object> goodsCate() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> cateList = mainService.getGoodsCate();
+		map.put("result", "SUCCESS");
+		map.put("cateList", cateList);
+		
+		return map;
+	}
+}

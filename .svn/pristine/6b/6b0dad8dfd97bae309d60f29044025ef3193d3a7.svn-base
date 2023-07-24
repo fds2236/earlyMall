@@ -1,0 +1,199 @@
+package com.eansoft.mall.admin.service.impl;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.eansoft.mall.admin.dao.AdminDao;
+import com.eansoft.mall.admin.service.AdminService;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+
+	@Autowired
+	private AdminDao adminDao;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	//회원관리
+	@Override
+	public Map<String, Object> getMemberList(Map<String, Object> memberMap) {
+		List<Map<String, Object>> dataList = adminDao.getMemberList(memberMap);
+		logger.info("서비스임플: {}", dataList);
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("dataList", dataList);	
+		logger.info("서비스임플 resultMap: {}", resultMap.get("dataList"));
+		logger.info("서비스임플 name: {}, mobile: {}, type: {}", memberMap.get("searchName"), memberMap.get("searchMobile"), memberMap.get("searchType"));
+		return resultMap;
+	}
+
+	//최근 한달 회원가입 건수
+	@Override
+	public int getMonthMember() {
+		return adminDao.getMonthMember();
+	}
+	
+	@Override
+	public Map<String, Object> getAllMember() {
+		List<Map<String, Object>> list = adminDao.getAllMember();
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+				
+				
+		if(list != null) {
+			
+			Date today = new Date();
+			SimpleDateFormat smdf = new SimpleDateFormat("yyyyMMdd");
+			smdf.format(today);
+			
+			int day = 0;
+			
+			for(Map<String, Object> map : list) {
+				logger.info("list - key = {}", map.get("REGDT"));
+				
+				if(smdf.equals(map.get("REGDT"))) {
+					day++;
+				}
+			}
+			
+			result.put("day", day);
+			result.put("mon", list.size());
+		}
+		
+		return result;
+	}
+	
+	
+	//오늘 회원가입 건수
+	@Override
+	public int getTodayMember() {
+		return adminDao.getTodayMember();
+	}
+	//최근 한달 총 주문 건수
+	@Override
+	public int getMonthOrder() {
+		return adminDao.getMonthOrder();
+	}
+	//오늘 총 주문 건수
+	@Override
+	public int getTodayOrder() {
+		return adminDao.getTodayOrder();
+	}
+	//최근 한달 이벤트 등록 건수
+	@Override
+	public int getMonthEvent() {
+		return adminDao.getMonthEvent();
+	}
+	//오늘 이벤트 등록 건수
+	@Override
+	public int getTodayEvent() {
+		return adminDao.getTodayEvent();
+	}
+	
+	//상품리스트 - tr
+	@Override
+	public Map<String, Object> getSearchGoodsList(Map<String, Object> map) {		
+		//리스트
+		List<Map<String, Object>> goodsSearchList = adminDao.GoodsSearchList(map);
+		Map<String, Object> result = new HashMap<>();			
+		result.put("dataList", goodsSearchList);	
+		//System.out.println("서비스임플에 결과값" + result);
+		return result;
+	}
+
+	// 주문관리
+	@Override
+	public Map<String, Object> getOrderList(Map<String, Object> map) {			
+		//리스트
+		List<Map<String, Object>> orderListd = adminDao.orderList(map);
+		Map<String, Object> result = new HashMap<>();			
+			result.put("dataList", orderListd);		
+		
+		return result;
+	}
+
+	//이벤트관리
+	@Override
+	public Map<String, Object> getEventList() {
+		List<Map<String, Object>> eventList = adminDao.eventList();
+		System.out.println("서비스임플에 결과값" + eventList);
+		Map<String, Object> result = new HashMap<>();
+		result.put("dataList", eventList);
+		return result;
+	}
+
+	//상품리스트에 필요한 goods카테고리 -tr
+	@Override
+	public List<Map<String, Object>> getGoodsCate() {				
+		return adminDao.getGoodsCate();
+	}
+
+	// 주문단계 업데이트
+	@Override
+	public int getUpdate(String oStep, String oId) {
+		int result = adminDao.updateOstep(oStep, oId);
+		logger.info("서비스임플 result: {}", result);
+		return result;
+	}
+
+
+	//상품관리 일괄노출 업데이트
+	@Override
+	public boolean updateAllViewY() {
+		int result = adminDao.doAllViewY();		
+		return result > 0;
+	}
+
+	@Override
+	public boolean updateAllViewN() {
+		int result = adminDao.doAllViewN();	
+		return result > 0;
+	}
+
+	@Override
+	public boolean updateAllDelY() {
+		int result = adminDao.doAllDelY();
+		return result > 0;
+	}
+
+	@Override
+	public void insertGoods(Map<String, Object> map, MultipartFile gImg, MultipartFile gImgDtl) throws IllegalStateException, IOException {
+		//상품등록
+		String gImgName = gImg.getOriginalFilename();
+		String gImgDtlName = gImgDtl.getOriginalFilename();
+		
+		//파일 저장
+		File directory = new File("C:/earlyMall");
+		directory.mkdirs();
+		File target1 = new File(directory, gImgName);  //File(File parent, String child)	파일 객체 parent의 child 파일에 대한 객체를 생성한다.
+		File target2 = new File(directory, gImgDtlName);
+		gImg.transferTo(target1);
+		gImgDtl.transferTo(target2);
+		
+		//map 세팅
+		map.put("gImg", directory + "\\" + gImgName);
+		map.put("gImgDtl", directory + "\\" + gImgDtlName);
+		
+		//db insert
+		adminDao.insertGoods(map);	
+		
+		
+	}
+
+	
+
+
+}
+
+

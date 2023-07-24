@@ -1,0 +1,71 @@
+package com.eansoft.mall.goods.service.impl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eansoft.mall.goods.dao.GoodsDao;
+import com.eansoft.mall.goods.service.GoodsService;
+import com.eansoft.mall.goods.service.GoodsService;
+
+import ch.qos.logback.classic.Logger;
+
+@Service
+public class GoodsServiceImpl implements GoodsService {
+	
+	@Autowired
+	private GoodsDao goodsDao;
+	
+	@Override
+	public Map<String, Object> getBasketList(String m_id, String sortType, int page) {
+		int countBasket = goodsDao.countBasket(m_id);
+		System.out.println("총 데이터 개수 : " + countBasket);
+		int amount = 5; // 데이터 7개씩 출력
+		int totalPages = (int) Math.ceil((double) countBasket / amount);
+		List<Map<String, Object>> dataList = goodsDao.basketList(m_id, sortType, page, amount);
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("dataList", dataList); 
+	    resultMap.put("totalPages", totalPages);
+		return resultMap;
+	}
+
+	@Override
+	public boolean getBasketCheck(String m_id, String g_id) {
+		String basketCheck = goodsDao.basketCheck(m_id, g_id);
+		if(basketCheck != null) {
+			return true;
+		} else return false;
+	}
+
+	@Override
+	public int getBasketAdd(Map<String, Object> map) {
+		int result = goodsDao.basketAdd(map);
+		return result;
+	}
+
+	@Override
+	public int getBasketQtyUpdate(String m_id, String g_id, String sign) {
+		int result = goodsDao.basketQtyUpdate(m_id, g_id, sign);
+		return result;
+	}
+
+	@Override
+	public int getBasketDel(String m_id, String g_id) {
+		int result = goodsDao.basketDel(m_id, g_id);
+		return result;
+	}
+	
+	
+
+	
+	
+	
+	
+
+	
+	
+	
+
+}

@@ -1,0 +1,29 @@
+package com.eansoft.mall.goods.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eansoft.mall.goods.dao.GoodsDao;
+import com.eansoft.mall.goods.service.GoodsService;
+
+@Service
+public class GoodsServiceImpl implements GoodsService {
+	
+	@Autowired
+	private GoodsDao goodsDao;
+
+	@Override
+	public List<Map<String, Object>> getBasketList(String m_id, String searchType) {
+		System.out.println("서비스임플 시작");
+		List<Map<String, Object>> result = goodsDao.basketList(m_id, searchType);
+		System.out.println(result);
+		return null;
+	}
+	
+	
+	
+
+}

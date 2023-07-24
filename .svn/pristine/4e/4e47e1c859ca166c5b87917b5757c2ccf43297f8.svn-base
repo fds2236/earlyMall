@@ -1,0 +1,258 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>공통코드관리</title>
+</head>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+<!-- jqGrid CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+
+<jsp:include page="../import/adminFrame.jsp"/>
+
+<!-- The actual JQuery code -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" ></script>
+<!-- The JQuery UI code -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" ></script>
+<!-- The jqGrid language file code-->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js" ></script>
+<!-- The atual jqGrid code -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js" ></script>
+
+<body>
+
+<div style="float:left;margin:30px;">	
+	<form id="codeG">
+	그룹명
+	<input type="text" id="cName" name="cName">
+	삭제여부
+	<select class="select" id="cDelYn" name="cDelYn">
+		<option value="">전체</option>
+		<option value="Y">Y</option>
+		<option value="N">N</option>
+	</select>
+	<button type="button" onclick="javascript:fnSearch();">조회</button>
+	</form><br>
+	
+	<button id=addRow onclick="javascript:addRow();">추가</button>	
+	<button id=delRow onclick="javascript:delRow();">삭제</button>
+	<button id=saveRow onclick="javascript:saveRow();">저장</button>
+	<div>
+		<table id="codeGrid"></table>
+		<div id="pager"></div>
+	</div>
+	<br>
+	<button id=addRow onclick="javascript:addRow();">추가</button>	
+	<button id=delRow onclick="javascript:delRow();">삭제</button>
+	<button id=saveRow onclick="javascript:saveRow();">저장</button>
+	<div id="detailGridContainer" style="display:block">
+	<table id="detailGrid"></table>
+		<div id="detailPager"></div>
+	</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	setManageTitle("공통코드관리");
+	
+	var searchResultColNames =  ['그룹아이디', '코드그룹명', '설명', '삭제여부','수정일자'];
+	var searchResultColModel = [
+		{name: 'C_ID', index: 'C_ID', align: 'center' },
+		{name: 'C_NAME', index: 'C_NAME', align: 'center' },
+		{name: 'C_COMMENT', index: 'C_COMMENT', align: 'center'},
+		{name: 'C_DEL_YN', index: 'C_DEL_YN', align: 'center'},
+		{name: 'MODIFY_DT', index: 'MODIFY_DT', align: 'center', 
+			formatter: function(cellValue, options, rowObject) {
+				  if (cellValue) {
+				    var date = new Date(cellValue);
+				    var formattedDate = date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+				    return formattedDate;
+				  }
+				  return '';
+				} }
+	];
+	
+	// 코드그룹
+	  $("#codeGrid").jqGrid({
+		    url: "/admin/codeGroup",
+		    datatype: "json",
+		    mtype: "GET",
+		    height: 260,
+		    width: 1020,
+		    colNames: searchResultColNames,
+		    colModel: searchResultColModel,
+		    rowNum: 10,
+		    rowList: [10, 20, 30],
+		    pager: "#pager",
+		    jsonReader: {
+		      repeatitems: false,
+		      root: "codeList",
+		      page: function(obj) {
+		        return 1;
+		      },
+		      total: function(obj) {
+		        return obj.totalPages;
+		      },
+		      records: function(obj) {
+		        return obj.totalRecords;
+		      }
+		    },
+		    multiselect:true, // select박스
+		    rownumbers:true, //row 숫자 붙여줌
+		    loadonce: true, // 데이터를 한 번에 모두 불러옴
+		    gridview: true, // 빠른 그리드 렌더링을 위해 사용
+		    viewrecords: true, // 총 레코드 수 표시
+		    caption: "코드그룹", // 그리드 제목
+		    cellEdit: true,
+		    
+/* 		    onCellSelect: function(rowid, iCol, cellcontent, e) {
+				if(iCol === 1) {
+					var rowData = $("#codeGrid").jqGrid('getRowData', rowid);
+					var cId = rowData.C_ID;
+					loadDetailGrid(cId);
+				}
+			}, */
+			
+			onSelectRow: function(rowid, status) {
+				//$('#detailGrid').html(jQuery('#codeGrid')[0].innerHTML);
+				//$('#codeGrid').html($(this)[0].innerHTML)
+			},
+		    loadComplete: function(data) {		    	
+		        console.log("서버에서 넘어온 데이터", data);
+		    }
+		  });
+		  
+		});
+	
+	// 검색
+	function fnSearch() {
+		var cName = $("#cName").val();
+		var cDelYn = $("#cDelYn").val();
+		console.log("setGrid전 cName: " + cName + ", cDelYn: " + cDelYn);
+		
+		$("#codeGrid").setGridParam({
+			postData: {
+				cName: cName,
+				cDelYn: cDelYn
+			},
+			gridComplete: function() {				
+			}
+		}).trigger("reloadGrid");
+		
+		$("#codeGrid").jqGrid('setGridParam', {
+			url: '/admin/codeGroup',
+			type: 'get',
+			datatype: 'json',			
+		}).trigger("reloadGrid");		
+	}
+	
+	// 행 추가
+	function addRow() {
+		var data = {C_NAME:'', C_COMMENT:"", C_DEL_YN:"", MODIFY_DT:""};
+		rowId = $("#codeGrid").getGridParam("reccount"); // 페이징 처리 시 현 페이지의 Max RowId 값
+		//$("#codeGrid").jqGrid("addRowData", rowId+1, data, 'first'); // 첫행에 Row 추가
+		$("#codeGrid").jqGrid("addRowData", rowId+1, data, 'last'); // 마지막 행에 Row 추가
+	};
+	// 행 삭제
+	function delRow(){
+		rowId = $("#codeGrid").getGridParam("reccount"); // 페이징 처리 시 현 페이지의 Max RowId 값
+		$("#codeGrid").delRowData(rowId);
+	};
+	// 저장
+/* 	function saveRow(id){
+		var row = $("#codeGrid").jqGrid('getRowData', id);
+
+		$("#codeGrid").jqGrid('saveRow',id, {
+			"url": "/admin/saveRow?id="+row.id,
+			"mtype": "POST",
+			"succesfunc": function(response) {
+			  return true;
+			}
+		});
+	} */
+	
+
+$(document).ready(function() {
+
+	var ColNames =  ['상세아이디', '그룹아이디', '코드상세명', '순서', '설명', '삭제여부','수정일자'];
+	var ColModel = [
+		{name: 'D_ID', index: 'D_ID', align: 'center'},
+		{name: 'C_ID', index: 'C_ID', align: 'center'},
+		{name: 'D_NAME', index: 'D_NAME', align: 'center'},
+		{name: 'D_SORT', index: 'D_SORT', align: 'center'},
+		{name: 'D_COMMENT', index: 'D_COMMENT', align: 'center'},
+		{name: 'D_DEL_YN', index: 'D_DEL_YN', align: 'center'},
+		{name: 'MODIFY_DT', index: 'MODIFY_DT', align: 'center',
+			formatter: function(cellValue, options, rowObject) {
+		        var date = new Date(cellValue);
+		        var formattedDate = date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+		        return formattedDate;
+		      }}
+	];
+	
+		// 코드상세
+		  $("#detailGrid").jqGrid({
+		    url: "/admin/codeDetail",
+		    datatype: "json",
+		    mtype: "GET",
+		    height: 260,
+		    width: 1020,
+		    colNames: ColNames,
+		    colModel: ColModel,
+		    rowNum: 10,
+		    rowList: [10, 20, 30],
+		    pager: "#detailPager",
+		    jsonReader: {
+		      repeatitems: false,
+		      root: "codeDeList",
+		      page: function(obj) {
+		        return 1;
+		      },
+		      total: function(obj) {
+		        return obj.totalPages;
+		      },
+		      records: function(obj) {
+		        return obj.totalRecords;
+		      }
+		    },
+		    multiselect:true, // select박스
+		    rownumbers:true, //row 숫자 붙여줌
+		    loadonce: true, // 데이터를 한 번에 모두 불러옴
+		    gridview: true, // 빠른 그리드 렌더링을 위해 사용
+		    viewrecords: true, // 총 레코드 수 표시
+		    caption: "코드상세", // 그리드 제목
+		    
+		    loadComplete: function(data) {
+		    	
+		        console.log("서버에서 넘어온 데이터(상세)", data);
+		    }
+		  });		  
+		});
+		
+function loadDetailGrid(cId) {
+	$("#detailGrid").setGridParam({
+		postData: {cId: cId},
+		loadComplete:function(data) {
+			console.log("data: " , data);
+		},
+		gridComplete: function() {
+			
+		}		
+	}).trigger("reloadGrid");
+	
+	$("#detailGrid").jqGrid('setGridParam', {
+		url: "/admin/codeDetail",
+		  type: 'GET',
+		  datatype: 'json',
+	  }).trigger("reloadGrid");
+}		
+
+
+
+</script>
+</html>

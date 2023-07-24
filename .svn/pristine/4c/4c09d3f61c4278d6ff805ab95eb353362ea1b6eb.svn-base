@@ -1,0 +1,10 @@
+package com.eansoft.mall.goods.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+public interface  GoodsService {
+	Map<String, Object> getBasketList(@Param("m_id") String m_id, @Param("searchType") String searchType, @Param("page") int page, @Param("amount") int amount);
+}

@@ -1,0 +1,13 @@
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp
+
+# DataSource
+spring.datasource.driver-class-name=net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+spring.datasource.url=jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl
+spring.datasource.username=EAN
+spring.datasource.password=ean
+
+mybatis.mapper-locations=classpath:/com/eansoft/mall/**/sql/*Mapper.xml
+mybatis.configuration.map-underscore-to-camel-case=true
+
+logging.config=classpath:logback.xml

@@ -1,0 +1,34 @@
+package com.eansoft.mall.member.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eansoft.mall.member.dao.MemberDao;
+import com.eansoft.mall.member.service.MemberService;
+import com.eansoft.mall.member.vo.MemberVo;
+
+@Service
+public class MemberServiceImpl implements MemberService {
+	@Autowired
+	MemberDao memberDao;
+
+	@Override
+	public MemberVo login(MemberVo memberVo) {
+		return memberDao.login(memberVo);
+	}
+	
+	@Override
+	public int idCheck(String mId) {
+		return memberDao.idCheck(mId);
+	}
+	
+	@Override
+	public int joinFromAdmin(MemberVo memberVo) {
+		return memberDao.joinFromAdmin(memberVo);
+	}
+	
+	@Override
+	public MemberVo getMemberInfo(String mId) {
+		return memberDao.getMemberInfo(mId);
+	}
+}

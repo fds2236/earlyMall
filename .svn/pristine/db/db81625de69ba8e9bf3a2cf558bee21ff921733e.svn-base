@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.goods.dao.GoodsDao">
+	<select id="countBasket" resultType="int">
+		select count(*) from basket where m_id = #{mId}
+	</select>
+	
+	<select id="basketList" resultType="Map">
+		SELECT b_qty, g_id, g_name, g_price, g_img, g_qty, rn
+		FROM (
+		    SELECT rownum AS rn, sub.*
+		    FROM (
+		        SELECT b.b_qty, b.g_id, g.g_name, g.g_price, g.g_img, g.g_qty
+		        FROM basket b
+		        JOIN goods g ON b.g_id = g.g_id
+		        WHERE b.m_id = #{mId}
+		        ORDER BY
+		        <choose>
+					<when test="sortType == 'highPrice'">
+						g.g_price desc
+					</when>
+					<when test="sortType == 'lowPrice'">
+						g.g_price
+					</when>
+					<when test="sortType == 'latestReg'">
+						b.reg_dt desc
+					</when>
+				</choose>		       
+		    ) sub
+		)
+		WHERE rn > (#{page}-1) * #{amount} AND rn <![CDATA[ <=]]> #{page} * #{amount}
+	</select>
+		
+	<select id="basketCheck" resultType="String">
+		select m_id, g_id from basket where m_id=#{mId} and g_id=#{gId}
+	</select>
+
+	<insert id="basketAdd" parameterType="hashmap">
+		insert into basket values(#{mId}, #{gId}, #{bQty}, sysdate)
+	</insert>
+		
+	<update id="basketQtyUpdate">
+		update basket set 
+		b_qty = #{bQty}
+		where m_id = #{mId} and g_id = #{gId}
+	</update>
+	
+	<delete id="basketDel">
+		delete 
+		from basket 
+		where m_id = #{mId}
+		<if test="gId != null and !''.equals(gId)">
+		and g_id = #{gId}
+		</if>
+	</delete>
+	
+	
+	
+</mapper>

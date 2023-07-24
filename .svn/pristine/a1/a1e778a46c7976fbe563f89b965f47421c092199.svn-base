@@ -1,0 +1,306 @@
+package com.eansoft.mall.admin.controller;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.eansoft.mall.admin.service.AdminService;
+import com.eansoft.mall.member.vo.MemberVo;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {	
+	@Autowired
+	private AdminService adminService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/dash")
+	public String dashBoard(HttpServletRequest request,
+							Model model) {
+		
+		// 내정보 조회 - 기본은 세션에 있음
+		HttpSession session = request.getSession();
+		MemberVo memberInfo = (MemberVo) session.getAttribute("memberInfo");
+		
+		String page = "";
+		
+		if(memberInfo == null || !"00".equals(memberInfo.getmType())) {
+			page = "main";
+		} else {
+			page = "admin/adminDash";
+		}
+		
+		//회원가입 건수
+		Map<String, Object> member = adminService.getMemberCnt();
+		model.addAttribute("memMonth", member.get("mon")); //한달
+		model.addAttribute("memToday", member.get("day")); //오늘
+		
+		//총 주문 건수
+		Map<String, Object> order = adminService.getOrderCnt();
+		model.addAttribute("orderMonth", order.get("mon"));
+		model.addAttribute("orderToday", order.get("day"));
+		
+		//이벤트 건수
+		Map<String, Object> event = adminService.getEventCnt();
+		model.addAttribute("eventMonth", event.get("mon"));
+		model.addAttribute("eventToday", event.get("day"));
+		
+		//최근 한달 이벤트 등록 건수
+//		model.addAttribute("eventMonth", adminService.getMonthEvent());
+		//오늘 이벤트 등록 건수
+//		model.addAttribute("eventToday", adminService.getTodayEvent());
+		
+		return page;
+	}
+
+	
+	// 상품관리 -tr
+	@GetMapping("/goodsManage")
+	public String goodsManagement(Model model) {
+		//goods카테고리 list
+		model.addAttribute("goodsCateList", adminService.getGoodsCate());		
+		return "admin/adminGoodsManage";
+	}
+	
+	//상품관리 -tr
+	@GetMapping("/goodsMg")
+	@ResponseBody
+	public Map<String, Object> goodsMg(
+			@RequestParam Map<String, Object> bodyMap
+			
+//			@RequestParam(value="gCateCd") String gCateCd,
+//            @RequestParam(value="searchKeyword") String searchKeyword,
+//            @RequestParam(value="gShowYn") String gShowYn,           
+//            @RequestParam(value="gDelYn") String gDelYn){		
+			){	
+//		Map<String, Object> map = new HashMap<String, Object>();
+//	       map.put("gCateCd", gCateCd);
+//	       map.put("searchKeyword", searchKeyword);
+//	       map.put("gShowYn", gShowYn);
+//	       map.put("gDelYn", gDelYn);	      
+		
+//	       logger.info("gCateCd", gCateCd);
+		
+		//logger.info("bodyMap --- {}", bodyMap);
+		
+		return adminService.getSearchGoodsList(bodyMap);		
+	}
+	
+	
+	
+	// 관리자 주문관리
+	@GetMapping("/orderManage") 
+	public String orderManage() {
+		
+		return "admin/adminOrderManage";
+	}
+	
+	// 관리자 주문관리
+	@GetMapping("/orderMg")
+	@ResponseBody
+	public Map<String, Object> orderMg(@RequestParam Map<String, Object> ordermap){		
+			logger.info("컨트롤러 map : " + ordermap);
+		 return adminService.getOrderList(ordermap);		
+	}	
+	
+	// 주문단계 업데이트
+	@GetMapping("/updateOstep")
+	@ResponseBody
+	public int updateOstep(
+			@RequestBody List<Map<String, Object>> modDataList) {
+		logger.info("modDataList 확인: " + modDataList);
+		int result = adminService.getUpdate(modDataList);
+		return result;
+	}
+
+	// 회원관리 페이지 접속
+	@GetMapping("/memberList")
+	public String memberList(HttpServletRequest request) {
+		
+		// 내정보 조회 - 기본은 세션에 있음
+		HttpSession session = request.getSession();
+		MemberVo memberInfo = (MemberVo) session.getAttribute("memberInfo");
+		
+		String page = "";
+		
+		if(memberInfo == null || !"00".equals(memberInfo.getmType())) {
+			page = "main";
+		} else {
+			page = "admin/memberList";
+		}
+		
+		return page;
+	}
+	 
+	// 회원관리 리스트 조회, 검색
+	@GetMapping("/getMemberList")
+	@ResponseBody
+	public Map<String, Object> getMemberList(@RequestParam Map<String, Object> memberMap) {
+		logger.info("컨트롤러 memberMap: {}", memberMap);
+		
+		return adminService.getMemberList(memberMap);
+	}
+	
+	
+	// 이벤트관리 페이지
+	@GetMapping("/eventManage") 
+	public String eventManage() {		
+		return "admin/adminEventManage";
+	}
+	
+	// 이벤트 리스트
+	@GetMapping("/getEventList") 
+	@ResponseBody
+	public Map<String, Object> getEventList(@RequestParam Map<String, Object> eventMap) {
+		logger.info("eventMap: {}", eventMap);
+		return adminService.getEventList(eventMap);
+	}
+	
+	// 상품관리 일괄노출 -tr
+	@GetMapping("/doAllViewY")
+	@ResponseBody
+	public String doAllViewY(@RequestParam int gId) {
+		boolean result = false;
+		result = adminService.updateAllViewY(gId);		
+		
+		if(result == true) {
+			return "success";
+		}
+		return "failure";
+	}
+	
+	// 상품관리 일괄비노출 -tr
+	@GetMapping("/doAllViewN")
+	@ResponseBody
+	public String doAllViewN(@RequestParam int gId) {
+		boolean result = false;
+		result = adminService.updateAllViewN(gId);
+		
+		if(result == true) {
+			return "success";
+		}		
+		return "failure";
+	}
+	
+	// 상품관리 일괄삭제 -tr
+	@GetMapping("/doAllDelY")
+	@ResponseBody
+	public String doAllDelY(@RequestParam int gId) {
+		boolean result = false;
+		result = adminService.updateAllDelY(gId);
+		
+		if(result == true) {
+			return "success";
+		}
+		return "failure";
+	}
+	
+	
+	// 상품관리 상품등록 -tr
+	@PostMapping("/insertGoods")
+	@ResponseBody
+	public String insertGoodsPop(
+	        @RequestParam Map<String, Object> bodyMap,
+	        @RequestParam MultipartFile gImg,
+	        @RequestParam MultipartFile gImgDtl
+	) throws IllegalStateException, IOException {				
+	    try {
+	        adminService.insertGoods(bodyMap, gImg, gImgDtl);
+	        return "success";
+	    } catch (Exception e) {
+	        return "error";
+	    }
+	}
+	
+	// 공통코드관리
+	@GetMapping("/common") 
+	public String common() {		
+		return "admin/common";
+	}
+	
+	// 코드그룹
+	@GetMapping("/codeGroup")
+	@ResponseBody
+	public Map<String, Object> codeGroup(@RequestParam Map<String, Object> map){		
+		logger.info("컨트롤러 공통코드관리-그룹 map: {}", map);
+		return adminService.getCodeGroup(map);		
+	}
+	
+	// 코드상세
+	@GetMapping("/codeDetail")
+	@ResponseBody
+	public Map<String, Object> codeDetail(@RequestParam Map<String, Object> map){		
+		logger.info("컨트롤러 공통코드관리-상세 map: {}", map);
+		return adminService.getCodeDetail(map);		
+	}
+	
+	// 코드그룹-수정사항 저장
+	@PostMapping("/saveRow")
+	@ResponseBody
+	public int saveRow(@RequestParam Map<String, Object> gridRow) {
+		logger.info("코드저장 컨트롤러 : {}" , gridRow);
+		return adminService.CodeSave(gridRow);
+	}
+//	// 코드그룹-삭제
+//	@PostMapping("/codeDel")
+//	@ResponseBody
+//	public int codeDel(@RequestParam Map<String, Object> map) {
+//		String selectedValue = (String) map.get("C_ID");
+//		logger.info("코드삭제 컨드롤러 : " + map);
+//		return adminService.codeDel(map);
+//	}
+	// 코드그룹-삭제
+	@PostMapping("/codeDel")
+	@ResponseBody
+	public int codeDel(@RequestParam(value="C_ID")String cId) {
+
+		return adminService.codeDel(cId);
+	}
+
+	
+	//상품관리 상품수정 -tr
+	@PostMapping("/updateGoods")
+	@ResponseBody
+	public String updateGoodsPop(
+	        @RequestParam Map<String, Object> bodyMap,
+	        @RequestParam MultipartFile gImg,
+	        @RequestParam MultipartFile gImgDtl) {
+	    try {
+	        boolean result = adminService.updateGoods(bodyMap, gImg, gImgDtl);
+	        if (result) {
+	            return "success";
+	        } else {
+	            return "failure";
+	        }
+	    } catch (IllegalStateException | IOException e) {
+	        e.printStackTrace();
+	        return "failure";
+	    }
+	}
+	
+	
+
+	
+
+
+}

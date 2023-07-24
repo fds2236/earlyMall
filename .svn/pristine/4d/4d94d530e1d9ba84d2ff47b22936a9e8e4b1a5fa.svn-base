@@ -1,0 +1,74 @@
+package com.eansoft.mall.member.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.eansoft.mall.member.service.MemberService;
+import com.eansoft.mall.member.vo.MemberVo;
+
+@Controller
+@RequestMapping("/member")
+
+public class MemberController {
+	@Autowired
+	private MemberService memberService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/myPage")
+	public String myPage(String mId, HttpServletRequest request) {
+		
+		// 내정보 조회 - 기본은 세션에 있음
+		logger.info("mid data = {}",mId);
+		HttpSession session = request.getSession();
+		MemberVo memberInfo = (MemberVo) session.getAttribute("memberInfo");
+		
+		logger.info("memberInfo data = {}",memberInfo);
+		
+		return "member/myPage";
+	}
+
+	// 아이디 중복체크
+	@PostMapping("/idCheck")
+	@ResponseBody
+	public String idCheck(MemberVo memberVo) {
+		String returnStr = "";
+		
+		int idCnt = memberService.idCheck(memberVo.getmId());
+		
+		if(idCnt > 0) {
+			returnStr = "duplicatedId";
+		} else {
+			returnStr = "availableId";
+		}
+		
+		return returnStr;
+		
+	}
+	
+	// 관리자페이지에서 회원등록
+	@PostMapping("/joinFromAdmin")
+	@ResponseBody
+	public String joinFromAdmin(MemberVo memberVo, Model model) {
+		int joinResult = memberService.joinFromAdmin(memberVo);
+		logger.info("joinResult: {}", joinResult);
+		
+		if(joinResult == 0) {
+			model.addAttribute("joinMsg", "joinFail");
+			return "/admin/insertMember";
+		}
+		
+		model.addAttribute("joinMsg", "joinSuccess");
+		return "/admin/memberList";
+	}
+}

@@ -1,0 +1,147 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>회원관리</title>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+<!-- jqGrid CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+<!-- The actual JQuery code -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
+<!-- The JQuery UI code -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" /></script>
+<!-- The jqGrid language file code-->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js" /></script>
+<!-- The atual jqGrid code -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js" /></script>
+<style>
+	#searchForm, #searchTable {
+		display: inline-block;
+	}
+	
+	input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+	}
+</style>
+</head>
+<body>
+<div>
+	<div>
+		<form id="searchForm">
+			<table id="searchTable">
+				<tr>
+					<td>회원명</td>
+					<td><input type="text" id="searchName" name="searchName"></td>
+					<td>폰번호</td>
+					<td><input type="number" id="searchMobile" name="searchMobile"></td>
+					<td>회원타입</td>
+					<td><input type="number" id="searchType" name="searchType"></td>
+				</tr>
+			</table>
+			<button type="button" id="btnSearch" onclick="fnSearch();">조회</button>
+		</form>
+		<button type="button" id="regMember" onclick="fnInsertPopup('insertMember', 'InsertMember');">회원등록</button>
+	</div>
+	<table id="memberList"></table>
+	<div id="pager"></div>
+</div>
+</body>
+<script>
+
+$(document).ready(function() {
+	var resultColNames = ['아이디', '비밀번호', '회원명', '폰번호', '주소기본', '주소상세', '삭제여부', '회원타입', '수정일시', '가입일시'];
+	var resultColModel = [
+		{name: 'mId', index: 'M_ID', width: 100, align: 'center'},
+		{name: 'mPass', index: 'M_PASS', width: 100, align: 'center', sortable: false},
+		{name: 'mName', index: 'M_NAME', width: 100, align: 'center'},
+		{name: 'mMobile', index: 'M_MOBILE', width: 100, align: 'center', sortable: false},
+		{name: 'mAddDefault', index: 'M_ADD_DEFAULT', width: 100, align: 'center', sortable: false},
+		{name: 'mAddDetail', index: 'M_ADD_DETAIL', width: 100, align: 'center', sortable: false},
+		{name: 'mDelYn', index: 'M_DEL_YN', width: 100, align: 'center'},
+		{name: 'mType', index: 'M_TYPE', width: 100, align: 'center'},
+		{name: 'modifyDt', index: 'MODIFY_DT', width: 100, align: 'center'},
+		{name: 'regDt', index: 'REG_DT', width: 100, align: 'center'}
+	];
+	
+	$("#memberList").jqGrid({
+		url: '/admin/getMemberList',
+		datatype: 'json',
+		mtype: 'get',
+		height: 250,
+		width: 1020,
+		colNames: resultColNames,
+		colModel: resultColModel,
+		autowidth: true,
+		rownumbers: true,
+		pager: '#pager',
+		rowNum: 10,
+		rowList: [10, 20, 30],
+		sortname: 'm_id',
+		sortorder: 'asc',
+		jsonReader: {
+			repeatitems: false,
+			root: "dataList",
+			page: function(obj) {
+				return 1;
+			},
+			total: function(obj) {
+				return obj.totalPages;
+			},
+			records: function(obj) {
+				return obj.totalRecords;
+			}
+		},
+		loadonce: true,
+		loadComplete: function(data) {
+			var jsonData = JSON.stringify(data);
+			console.log("회원조회: " + jsonData);
+		}
+	});
+	
+});
+	function fnSearch() {
+		var searchName = $("#searchName").val();
+		var searchMobile = $("#searchMobile").val();
+		var searchType = $("#searchType").val();
+		
+		console.log("setGrid전 searchName: " + searchName + ", searchMobile: " + searchMobile + ", searchType: " + searchType);
+		
+		$("#memberList").setGridParam({
+			postData: {
+				'searchName': searchName,
+				'searchMobile': searchMobile,
+				'searchType': searchType
+			},
+			loadComplete: function(data) {
+				console.log("searchName: " + searchName + ", searchMobile: " + searchMobile + ", searchType: " + searchType);
+				console.log(data.dataList);
+				$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
+                $("#memberList_nodata").remove();
+                if(data && data.dataList && data.dataList.length === 0) {
+                   $("#memberList.ui-jqgrid-btable").after("<p id='memberList_nodata' style='margin-top: 15px; text-align: center; font-weight:bold;'>검색된 자료가 없습니다</p>");
+                }
+
+			},
+			gridComplete: function() {
+				
+			}
+		}).trigger("reloadGrid");
+		
+		$("#memberList").jqGrid('setGridParam', {
+			url: '/admin/getMemberList',
+			mtype: 'get',
+			datatype: 'json'
+		}).trigger("reloadGrid");
+	}
+	
+	function fnInsertPopup(page, name) {
+		window.open(page, name, "width=1000, height=700, left=0, top=0");
+	}
+	
+	function fnUpdatePopup(page, name) {
+		window.open(page, name, "width=1000, height=700, left=0, top=0");
+	}
+</script>
+</html>

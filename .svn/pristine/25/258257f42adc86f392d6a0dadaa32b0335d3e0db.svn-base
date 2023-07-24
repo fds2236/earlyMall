@@ -1,0 +1,36 @@
+package com.eansoft.mall.admin.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
+public interface AdminDao {
+
+
+	public int getMonthMember();
+
+	public int getTodayMember();
+
+	public int getMonthOrder();
+	
+
+	public int getMonthEvent();
+	
+	//상품관리 totalCount - tr
+	public int GoodsTotalCount();
+	
+	//상품관리목록 list - tr
+	public List<Map<String, Object>> GoodsList(Map<String, Object> map);
+	
+
+	//구매관리
+	public List<Map<String, Object>> orderList(Map<String, Object> map);
+	
+
+	List<Map<String, Object>> getMemberList();
+
+}

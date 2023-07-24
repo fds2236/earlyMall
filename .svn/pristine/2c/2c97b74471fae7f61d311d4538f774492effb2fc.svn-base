@@ -1,0 +1,5 @@
+package com.eansoft.mall.goods.service;
+
+public interface  GoodsService {
+
+}

@@ -1,0 +1,36 @@
+package com.eansoft.mall.order.service.impl;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.eansoft.mall.order.dao.OrderDao;
+import com.eansoft.mall.order.service.OrderService;
+import com.eansoft.mall.order.service.OrderService;
+import com.eansoft.mall.order.service.OrderService;
+
+@Service
+public class OrderServiceImpl implements OrderService {
+	@Autowired
+	OrderDao orderDao;
+
+	@Override
+	@Transactional
+	public void getOrderAction(Map<String, Object> map) {
+		
+		int insertResult = orderDao.orderAdd(map); // 주문 추가
+        if (insertResult == 0) {
+            // 익셉션이 나면 롤백이 됨 throw new exception 사용하기
+            }
+        int updateResult = orderDao.orderAfterUpdateQty(map); // 재고 업데이트
+        if (updateResult == 0) {
+
+        }
+        orderDao.orderAfterDeleteBasket(map); // 장바구니 삭제
+
+	}
+	
+	
+}

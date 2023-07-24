@@ -1,0 +1,42 @@
+package com.eansoft.mall.admin.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.eansoft.mall.member.vo.MemberVo;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+	
+//	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/dash")
+	public String dashBoard(HttpServletRequest request,
+							Model model) {
+		
+		// 내정보 조회 - 기본은 세션에 있음
+		HttpSession session = request.getSession();
+		MemberVo memberInfo = (MemberVo) session.getAttribute("memberInfo");
+		
+		String page = "";
+		
+		if(memberInfo == null || !"00".equals(memberInfo.getmType())) {
+			page = "main";
+		} else {
+			page = "admin/adminDash";
+		}
+		
+		//최근 한달 회원가입 건수
+		
+		
+		return page;
+	}
+	
+
+}

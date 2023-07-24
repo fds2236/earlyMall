@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.main.dao.MainDao">
+
+	<select id="searchEvent" resultType="hashmap">
+		SELECT E_ID AS ID
+		     , E_NAME AS NAME
+		     , TO_CHAR(E_ST_DT,'YYYY-MM-DD') AS SDT
+		     , TO_CHAR(E_END_DT,'YYYY-MM-DD') AS EDT
+		     , E_IMG AS IMG
+		     , E_COMMENT AS CMT
+		FROM EVENT
+		WHERE E_DEL_YN = 'N'
+		AND SYSDATE BETWEEN E_ST_DT AND E_END_DT
+		AND (UPPER(E_NAME) LIKE '%'||UPPER(#{keyword})||'%' OR UPPER(E_COMMENT) LIKE '%'||UPPER(#{keyword})||'%')
+	</select>
+	
+	<select id="searchGoods" resultType="hashmap">
+		SELECT G.G_ID AS ID
+		      , (SELECT D_NAME 
+		          FROM CODE_DETAIL 
+		         WHERE C_ID = '200' 
+		           AND D_ID = G.G_CATE_CD) AS CTNAME
+		     , G.G_NAME AS NAME
+		     , G.G_PRICE AS PRICE
+		     , (SELECT EG_PRICE
+		          FROM EVENT_GOODS 
+		         WHERE G_ID = G.G_ID 
+		         AND E_ID IN (SELECT E_ID
+                                FROM EVENT
+                               WHERE SYSDATE BETWEEN E_ST_DT AND E_END_DT
+                                 AND E_DEL_YN = 'N')
+                 ) AS EPRICE
+		     , G.G_QTY AS QYT
+		     , G.G_IMG AS IMG
+		FROM GOODS G
+		WHERE G.G_SHOW_YN = 'Y'
+		AND G.G_DEL_YN = 'N'
+		AND G.G_QTY > 0
+		AND UPPER(G.G_NAME) LIKE '%'||UPPER(#{keyword})||'%'
+		ORDER BY G.G_CATE_CD
+	</select>
+	
+	<select id="searchCode" resultType="hashmap">
+		SELECT D_ID as dId
+			 , D_NAME as dName
+		  FROM CODE_DETAIL
+		 WHERE C_ID = #{dId}
+		 ORDER BY D_SORT
+	</select>
+	
+</mapper>

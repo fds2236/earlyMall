@@ -1,0 +1,94 @@
+package com.eansoft.mall.goods.controller;
+
+import java.util.Map;
+import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.eansoft.mall.goods.service.GoodsService;
+
+@Controller
+@RequestMapping("/goods")
+public class GoodsController {
+	@Autowired
+	GoodsService goodsService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/cate")
+	public String cateMain() {	
+		return "goods/cateMain";
+	}
+	
+	@GetMapping("/basket")
+	public String basket() {
+		return "goods/cart";
+	}
+	
+	@GetMapping("/basketList")
+	@ResponseBody
+	public Map<String, Object> basketList(
+			@RequestParam(value="mId") String m_id,
+			@RequestParam(value="sortType") String sortType,
+			@RequestParam(value="page") int page){
+		logger.info("mId : " + m_id);
+		logger.info("sortType : " + sortType);
+		logger.info("page : " + page);
+		Map<String, Object> basketInfo = goodsService.getBasketList(m_id, sortType, page);
+		return basketInfo;
+	}
+	
+	@GetMapping("/basketCheck")
+	@ResponseBody
+	public boolean basketCheck(
+			@RequestParam(value="mId") String m_id,
+			@RequestParam(value="gId") String g_id) {
+		logger.info("mId : " + m_id);
+		logger.info("gId : " + g_id);
+		return goodsService.getBasketCheck(m_id, g_id);	
+	}
+	
+	@PostMapping("/basketAdd")
+	@ResponseBody
+	public int basketAdd(
+			@RequestParam(value="mId") String m_id,
+			@RequestParam(value="gId") String g_id,
+			@RequestParam(value="bQty") String b_qty) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("m_id", m_id);
+		map.put("g_id", g_id);
+		map.put("b_qty", b_qty);
+		return goodsService.getBasketAdd(map);  
+	}
+	
+	@PostMapping("/basketQtyUpdate")
+	@ResponseBody
+	public int basketQtyUpdate(
+			@RequestParam(value="mId")String m_id,
+			@RequestParam(value="gId")String g_id,
+			@RequestParam(value="sign")String sign) {
+		logger.info("mId : " + m_id);
+		logger.info("gId : " + g_id);
+		logger.info("sign : " + sign);
+		return goodsService.getBasketQtyUpdate(m_id, g_id, sign);
+	}
+	
+	@PostMapping("basketDelete")
+	@ResponseBody
+	public int basketDelete(
+			@RequestParam(value="mId")String m_id,
+			@RequestParam(value="gId")String g_id) {
+		return goodsService.getBasketDel(m_id, g_id);
+	}
+	
+	
+
+}

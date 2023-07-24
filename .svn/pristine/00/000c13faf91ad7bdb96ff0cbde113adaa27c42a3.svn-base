@@ -1,0 +1,61 @@
+package com.eansoft.mall.goods.controller;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.eansoft.mall.goods.service.GoodsService;
+
+@Controller
+@RequestMapping("/goods")
+public class GoodsController {
+	@Autowired
+	GoodsService goodsService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/cate")
+	public String cateMain() {	
+		return "goods/cateMain";
+	}
+	
+	@GetMapping("/basket")
+	public String basket(
+			@RequestParam(value="mId") String m_id) {
+		return "goods/cart";
+	}
+	
+	@GetMapping("/basketList")
+	@ResponseBody
+	public Map<String, Object> basketList(
+			@RequestParam(value="mId") String m_id){
+		logger.info("mId : " + m_id);
+		Map<String, Object> basketInfo = goodsService.getBasketList(m_id);
+		return basketInfo;
+	}
+	
+	@GetMapping("/basketCheck")
+	@ResponseBody
+	public boolean basketCheck(
+			@RequestParam(value="mId") String m_id,
+			@RequestParam(value="gId") String g_id) {
+		logger.info("mId : " + m_id);
+		logger.info("gId : " + g_id);
+		return goodsService.getBasketCheck(m_id, g_id);	
+	}
+	
+	
+	
+	
+
+}

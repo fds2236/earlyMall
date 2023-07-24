@@ -1,0 +1,6 @@
+package com.eansoft.mall.order.service;
+
+public interface  OrderService {
+
+	
+}

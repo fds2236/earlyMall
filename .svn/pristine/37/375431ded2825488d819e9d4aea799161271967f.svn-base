@@ -1,0 +1,76 @@
+package com.eansoft.mall.admin.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.eansoft.mall.admin.dao.AdminDao;
+import com.eansoft.mall.admin.service.AdminService;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+
+	@Autowired
+	private AdminDao adminDao;
+	
+	@Override
+	public Map<String, Object> getMemberList(@RequestParam("searchName") String searchName, @RequestParam("searchMobile") String searchMobile, @RequestParam("searchType") String searchType) {
+		List<Map<String, Object>> dataList = adminDao.getMemberList(searchName, searchMobile, searchType);
+		System.out.println(dataList);
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("dataList", dataList);	
+		System.out.println(resultMap.get("dataList"));
+		System.out.println("서비스임플 name:" + searchName + ", mobile: " + searchMobile + ", type: " + searchType);
+		return resultMap;
+	}
+
+	@Override
+	public int getMonthMember() {
+		return adminDao.getMonthMember();
+	}
+
+	@Override
+	public int getTodayMember() {
+		return adminDao.getTodayMember();
+	}
+
+	@Override
+	public int getMonthOrder() {
+		return adminDao.getMonthOrder();
+	}
+	
+	@Override
+	public int getMonthEvent() {
+		return adminDao.getMonthEvent();
+	}
+	
+	//상품리스트 - tr
+	@Override
+	public Map<String, Object> getSearchGoodsList(Map<String, Object> map) {		
+		//리스트
+		List<Map<String, Object>> goodsSearchList = adminDao.GoodsSearchList2(map);
+		Map<String, Object> result = new HashMap<>();			
+		result.put("dataList", goodsSearchList);	
+		System.out.println("서비스임플에 결과값" + result);
+		return result;
+	}
+
+	// 주문관리
+	@Override
+	public Map<String, Object> getOrderList(Map<String, Object> map) {			
+		//리스트
+		List<Map<String, Object>> orderListd = adminDao.orderList(map);
+		Map<String, Object> result = new HashMap<>();			
+			result.put("dataList", orderListd);		
+		
+		return result;
+	}
+
+}
+
+

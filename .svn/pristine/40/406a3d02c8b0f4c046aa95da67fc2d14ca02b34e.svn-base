@@ -1,0 +1,224 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>주문창</title>
+<style>
+.main{
+	margin: auto;
+	width:1024px;
+}
+.goodsInfo, .addrInfo, .cardInfo{
+	border: solid 3px orange;
+	margin: auto;
+	margin-bottom:30px;
+	width: 1000px;
+	height: 220px;
+}
+.addrInput input {
+	margin:5px;
+	width: 850px; 
+}
+
+img{
+	width:200px;
+	height:150px;
+}
+button{
+	width:200px;
+	height:70px;
+	font-size:18px;
+	background-color:orange;
+	border:none;
+	color:white;
+	border-radius: 10px;
+}
+#postButton{
+	font-size:12px;
+	width:100px;
+	height:30px;
+	color:white;
+	background-color:orange;
+	border:none;
+	border-radius: 4px;
+	cursor:pointer;
+}
+</style>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+<h1>주문하는 페이지</h1>
+<div class="main">
+	<div class="goodsInfo">
+		<table>
+		<tr>
+		<th>상품정보</th>
+		<th>배송비</th>
+		<th>수량</th>
+		<th>할인</th>
+		<th>총금액</th>
+		</tr>	
+		</table>
+	</div>
+	<div class="addrInfo">
+		<p>배송지 정보</p>
+		<div><input id="sameAddr" type="checkbox">주문자 정보와 동일</div>
+		<div class="addrInput">
+			<div><input id="name" placeholder="이름"></div>
+			<div><input id="phone" placeholder="폰번호"></div>
+			<div><input id="addr1" placeholder="주소"></div>
+			<div><input id="addr2" placeholder="상세주소"><input id="postButton" type="button" onclick="searchAddr()" value="우편번호 찾기"></div>
+		</div>
+	</div>
+	<div class="cardInfo">
+		<p>결제 수단</p>
+		<img src="">
+		<input type="text" id="cardNumber" placeholder="카드번호">
+
+		<select>
+			<option>일시불</option>
+			<option>3개월</option>
+			<option>5개월</option>
+			<option>6개월</option>
+			<option>12개월</option>
+		</select>
+			<button>결제하기</button>
+
+	</div>
+</div>
+
+<script>
+var mId = "${orderInfo.mId}"; // 사실 어떻게보면 요것도 이전 페이지에서 안넘겨도 될 듯 세션에서 꺼내도 되니까!
+var gId = "${orderInfo.gId}";
+var oQty = "${orderInfo.bQty}";
+var loginInfo = "${memberInfo}";
+var oPrice;
+
+if (!loginInfo) {
+	  alert("잘못된 접근입니다. 로그인 후 이용하시기바랍니다.");
+	  window.location.href = "/login";
+	}		
+		
+$(document).ready(function(){
+		console.log("gId : " + gId);
+	$.ajax({
+		url: "/order/orderGoods",
+		type : "GET",
+		data : {
+			gId : gId
+		},
+		success: function(item){
+			console.log("넘어온 데이터 : ", item);
+			console.log("상품명 : " + item.G_NAME);
+			console.log("상품 가격 : " + item.G_PRICE);
+			console.log("상품 이벤트 가격 : " + item.EG_PRICE);
+			if(item.EG_PRICE) {
+				console.log("이벤트 가격!!!");
+				oPrice = oQty * item.EG_PRICE;
+				var discount = (item.G_PRICE - item.EG_PRICE) * oQty;
+				console.log("할인금액 : " + discount);
+			} else {
+				oPrice = oQty * item.G_PRICE; console.log("일반 가격!!!");
+				var discount = 0;
+				}
+			var goodsInfo = 
+				"<tr>" + 
+// 					"<td><div><img src='" + item.G_IMG + "'></div>" + item.G_NAME + "</td>" + 
+					"<td><img src='" + item.G_IMG + "'>" + item.G_NAME + "</td>" + 
+				     "<td>" + '2500원' + "</td>" +
+				     "<td>" + oQty + '개' + "</td>" +
+				     "<td>" + discount + '원' +"</td>" +
+				     "<td>" + oPrice + '원' + "</td>" +
+				"<tr>";	
+			  $(".goodsInfo table").append(goodsInfo);
+		}
+	})
+})
+
+
+// 체크박스 주문자 정보 동일
+$("#sameAddr").on("change", function() {
+    if ($(this).is(":checked")) {
+    	console.log("체크체크");
+    	$("#name").val("${memberInfo.mName}").prop("disabled", true);
+    	$("#phone").val("${memberInfo.mMobile}").prop("disabled", true);
+    	$("#addr1").val("${memberInfo.mAddDefault}").prop("disabled", true);
+    	$("#addr2").val("${memberInfo.mAddDetail}").prop("disabled", true);
+    	$("#postButton").prop("disabled", true).css({
+    		  "background-color": "grey",
+    		  "cursor": "default"
+    		});
+    } else {
+    	    $("#name").val("").prop("disabled", false);
+    	    $("#phone").val("").prop("disabled", false);
+    	    $("#addr1").val("").prop("disabled", false);
+    	    $("#addr2").val("").prop("disabled", false);
+    	    $("#postButton").prop("disabled", false).css({
+    	    	  "background-color": "orange",
+    	    	  "cursor": "pointer"
+    	    	});
+    }
+  });
+  
+// 우편번호 찾기
+function searchAddr(){
+	   new daum.Postcode({
+           oncomplete: function(data) {
+               var addr = ''; // 주소 변수
+               if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                   addr = data.roadAddress;
+               } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                   addr = data.jibunAddress;
+               }
+               document.getElementById("addr1").value = addr;
+               document.getElementById("addr2").focus();
+           }
+       }).open();
+}
+ 
+// 카드번호 유효값 체크
+document.getElementById("cardNumber").addEventListener("input", function(event) {
+	  var input = event.target;
+	  var inputValue = input.value;
+	  var numericValue = inputValue.replace(/\D/g, ""); // 숫자 이외의 문자 제거
+	  input.value = numericValue; // 숫자만 남은 값으로 필드 업데이트
+	});
+
+// 결제 버튼 클릭
+$(".cardInfo").on('click', 'button', function() {
+	console.log("클릭클릭클릭");
+	console.log("mId : " + mId);
+	console.log("gId : " + gId);
+	console.log("oQty : " + oQty);
+	console.log("oPrice : " + oPrice);
+	// mId, gId, oQty, oPrice 보내야함
+	// 주문 가격은 수량 * g_price(혹은 이벤트 가격있으면 eg_price)
+// 	window.location.href = '/order/orderAction?gId=' + gId + '&mId=' + mId + 'oQty=' + oQty + 'oPrice=' + oPrice;
+	$.ajax({
+		method: "GET",
+	    url: "/order/orderAction",
+	    data: {
+	    	mId:mId,
+	    	gId:gId,
+	    	oQty:oQty,
+	    	oPrice:oPrice
+	    },
+	    success: function(data) {
+	    	alert("주문이 완료되었습니다!!");
+// 	    	window.location.href = '/member/mypage?mId' + mId; // 마이페이지로 이동
+	    	
+	    },
+	    error: function() {
+	    	alert("주문 실패!!");
+        }
+	})
+
+
+
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>주문창</title>
+<style>
+.main{
+/* 	margin: auto; */
+/* 	width:1024px; */
+	width: 70%;
+	margin: 60px 15%;
+}
+.goodsContainer, .addrContainer, .cardContainer{
+	border: solid 3px rgb(91, 155, 213);
+	margin: auto; 
+	margin-bottom:30px;
+	width: 1000px;
+	height: 220px;
+}
+
+.goodsContainer img{
+	width:200px;
+	height:150px;
+}
+
+td{
+	text-align:center;
+}
+
+.addrInput {
+	margin-left:5px;
+}
+
+#name{
+	width:120px;
+}
+
+#phone2, #phone3{
+	width:50px;
+}
+
+#addr1, #addr2{
+	width:500px;
+}
+
+.cardContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align:center;
+}
+
+.cardContainer img{
+	width:340px;
+	height:180px;
+}
+
+.cardContainer #cardInfo{
+	margin:30px;
+	width:200px;
+	text-align:left;
+}
+
+.card{
+	margin-bottom:5px;
+	color:white;
+	width:150px;
+	height:50px;;
+	border:none;
+	border-radius: 5px;
+	background-color:rgb(91, 155, 213);
+	cursor:pointer;
+}
+
+.modal {
+	display: none; 
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.modal-content {
+	background-color: #fff;
+	width: 400px;
+	margin: 100px auto;
+	padding: 20px;
+}
+
+.modal-close {
+  	display: block;
+	margin-top: 20px;
+}
+
+#postButton{
+	font-size:12px;
+	margin-left:30px;
+	width:100px;
+	height:30px;
+	color:white;
+	background-color:rgb(91, 155, 213);
+	border:none;
+	border-radius: 4px;
+	cursor:pointer;
+}
+
+#payButton{
+	width:200px;
+	height:70px;
+	font-size:18px;
+	background-color:rgb(91, 155, 213);
+	border:none;
+	color:white;     
+	border-radius: 10px;
+	cursor:pointer;
+}
+</style>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+<jsp:include page="../import/mainFrame.jsp"/>
+<div class="main">
+	<div class="goodsContainer">
+		<table id="goodsTable">
+		<tr>
+		<th style="width: 400px;">상품정보</th>
+		<th style="width: 120px;">가격</th>
+		<th style="width: 120px;">배송비</th>
+		<th style="width: 120px;">수량</th>
+		<th style="width: 120px;">할인</th>
+		<th style="width: 120px;">총금액</th>
+		</tr>	
+		</table>
+	</div>
+	<div class="addrContainer">
+		<p>배송지 정보</p>
+		<div><input id="sameAddr" type="checkbox">주문자 정보와 동일</div>
+		<div class="addrInput">
+			<div><input id="name" placeholder="이름"></div>
+			<div class="phoneInput">
+				<select id="phone1">
+					<option value="010">010</option>
+					<option value="011">011</option>
+					<option value="016">016</option>
+					<option value="017">017</option>
+					<option value="018">018</option>
+					<option value="019">019</option>
+				</select>
+				<span class="dash">-</span>
+				<input type="text" id="phone2" maxlength="4" onKeyup="this.value=this.value.replace(/[^-0-9]/g,'');">
+				<span class="dash">-</span>
+				<input type="text" id="phone3" maxlength="4" onKeyup="this.value=this.value.replace(/[^-0-9]/g,'');">
+				
+			</div>
+			<div><input id="addr1" placeholder="주소"></div>
+			<div><input id="addr2" placeholder="상세주소"><input id="postButton" type="button" onclick="searchAddr()" value="주소 찾기"></div>
+		</div>
+	</div>
+	<div class="cardContainer">
+<!-- 		<p>결제 수단</p> -->
+		<img id="cardImg" src="/img/카드이미지.png">
+		<div id="cardInfo">
+			<button onclick="choiceCard()">카드사 선택</button>
+			<p id="cardCompany">카드를 선택해주세요</p>
+			<input type="text" id="cardNumber" placeholder="카드번호" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
+			<select>
+				<option>일시불</option>
+				<option>3개월</option>
+				<option>5개월</option>
+				<option>6개월</option>
+				<option>12개월</option>
+			</select>
+		
+		</div>
+		<button id="payButton">결제하기</button>
+	</div>
+</div>
+
+<!-- 모달창 -->
+<div class="modal">
+  <div class="modal-content">
+    <h2>카드사 선택</h2>
+    <button class='card' value="신한">신한카드</button>
+    <button class='card' value="우리">우리카드</button>
+    <button class='card' value="현대">현대카드</button>
+    <button class='card' value="국민">국민카드</button>
+    <button class='modal-close'>닫기</button>
+  </div>
+</div>
+
+<script>
+var mId = "${orderInfo.mId}"; // 사실 어떻게보면 요것도 이전 페이지에서 안넘겨도 될 듯 세션에서 꺼내도 되니까!
+var gId = "${orderInfo.gId}";
+var oQty = "${orderInfo.oQty}";
+var loginInfo = "${memberInfo}";
+var loginAddDetail = "${memberInfo.mAddDetail}";
+var oPrice;
+var cardName = "";
+
+if (!loginInfo) {
+	  alert("잘못된 접근입니다. 로그인 후 이용하시기바랍니다.");
+	  window.location.href = "/login";
+	}		
+		
+$(document).ready(function(){		
+	// 상품상세정보 가지고오기
+	$.ajax({
+		url: "/order/orderGoods",
+		type : "GET",
+		data : {
+			gId : gId
+		},
+		success: function(item){
+			console.log("넘어온 데이터 : ", item);
+			if(item.EG_PRICE) {
+				oPrice = (oQty * item.EG_PRICE)+2500;
+				var discount = (item.G_PRICE - item.EG_PRICE) * oQty;
+			} else {
+				oPrice = (oQty * item.G_PRICE)+2500; 
+				var discount = 0;
+				}
+			var goodsInfo = 
+				"<tr>" + 
+					"<td style='text-align: center;'>" +
+				    "<img src='" + item.G_IMG + "' style='display: block; margin: 0 auto;'>" +
+				    item.G_NAME +
+				    "</td>" +
+				 	 "<td>" + item.G_PRICE.toLocaleString()+'원' + "</td>" +
+				     "<td>" + '2,500원' + "</td>" +
+				     "<td>" + oQty + '개' + "</td>" +
+				     "<td>" + discount.toLocaleString() + '원' +"</td>" +
+				     "<td>" + oPrice.toLocaleString() + '원' + "</td>" +
+				"<tr>";	
+			  $(".goodsContainer table").append(goodsInfo);
+		}
+	})
+})
+
+// 주문자 정보 동일 체크박스
+$("#sameAddr").on("change", function() {
+    if ($(this).is(":checked")) {
+    	console.log("체크");
+    	// 체크표시하는 순간 데이터 val 빈 null체크해서 데이터있으면 .prop("disabled", true)로 하고싶음
+//     	$("#name").val("${memberInfo.mName}").prop("disabled", true);
+//     	$("#phone1").val("${memberInfo.mMobile}".substring(0,3)).prop("disabled", true); 
+//     	$("#phone2").val("${memberInfo.mMobile}".slice(3,-4)).prop("disabled", true); 
+//     	$("#phone3").val("${memberInfo.mMobile}".slice(-4)).prop("disabled", true);
+//     	$("#addr1").val("${memberInfo.mAddDefault}").prop("disabled", true);
+    	
+    	$("#name").val("${memberInfo.mName}");
+    	$("#phone1").val("${memberInfo.mMobile}".substring(0,3));
+    	$("#phone2").val("${memberInfo.mMobile}".slice(3,-4));
+    	$("#phone3").val("${memberInfo.mMobile}".slice(-4));
+    	$("#addr1").val("${memberInfo.mAddDefault}");
+    	$("#addr2").val("${memberInfo.mAddDetail}");
+      	
+//     	$("#postButton").prop("disabled", true).css({
+//     		  "background-color": "grey",
+//     		  "cursor": "default"
+//     		});
+    	
+    	
+    } else {
+//     	    $("#name").val("").prop("disabled", false);
+//     	    $("#phone1").val("010").prop("disabled", false);
+//     	    $("#phone2").val("").prop("disabled", false);
+//     	    $("#phone3").val("").prop("disabled", false);
+//     	    $("#addr1").val("").prop("disabled", false);
+//     	    $("#addr2").val("").prop("disabled", false);
+//     	    $("#postButton").prop("disabled", false).css({
+//     	    	  "background-color": "rgb(91, 155, 213)",
+//     	    	  "cursor": "pointer"
+//     	    	});
+    }
+
+  });
+  
+// 우편번호 찾기
+function searchAddr(){
+	   new daum.Postcode({
+           oncomplete: function(data) {
+               var addr = ''; // 주소 변수
+               if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                   addr = data.roadAddress;
+               } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                   addr = data.jibunAddress;
+               }
+               document.getElementById("addr1").value = addr;
+               document.getElementById("addr2").focus();
+           }
+       }).open();
+}
+
+//모달을 표시하거나 숨기는 함수
+function toggleModal() {
+  var modal = document.querySelector('.modal');
+  modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
+}
+
+// 모달팝업
+function choiceCard(){
+	 toggleModal();
+}
+
+// 모달 닫기
+document.querySelector('.modal-close').addEventListener('click', function() {
+  toggleModal();
+});
+
+// 카드사 선택
+$(".card").on('click', function(){
+	cardName = $(this).val();
+	 toggleModal();
+	 $("#cardCompany").text(cardName+"카드");
+})
+
+// 결제 버튼 클릭
+$(".cardContainer").on('click', '#payButton', function() {
+	console.log("결제버튼 클릭");
+	console.log("mId : " + mId);
+	console.log("gId : " + gId);
+	console.log("oQty : " + oQty);
+	console.log("oPrice : " + oPrice);
+	
+	// 입력값 확인
+    var name = $("#name").val();
+    var phone1 = $("#phone1").val();
+    var phone2 = $("#phone2").val();
+    var phone3 = $("#phone3").val();
+    var addr1 = $("#addr1").val();
+    var addr2 = $("#addr2").val();
+    var cardNumber = $("#cardNumber").val();
+
+    if (name.trim() === "") {
+        alert("이름을 입력해주세요.");
+        $("#name").focus();
+        return; 
+    }
+    if (phone1.trim() === "") {
+        alert("폰번호를 입력해주세요.");
+        $("#phone1").focus(); 
+        return; 
+    }
+    if (phone2.trim() === "") {
+        alert("폰번호를 입력해주세요.");
+        $("#phone2").focus(); 
+        return; 
+    }
+    if (phone3.trim() === "") {
+        alert("폰번호를 입력해주세요.");
+        $("#phone3").focus(); 
+        return; 
+    }
+    if (addr1.trim() === "") {
+        alert("주소를 입력해주세요.");
+        $("#addr1").focus();
+        return; 
+    }
+    if (addr2.trim() === "") {
+        alert("상세주소를 입력해주세요.");
+        $("#addr2").focus(); 
+        return;
+    }
+    if(cardName.trim() === "") {
+    	 alert("카드사를 선택해주세요.");
+    	 return; 
+    }
+    
+    if (cardNumber.trim() === "") {
+        alert("카드번호를 입력해주세요.");
+        $("#cardNumber").focus(); 
+        return; 
+    }
+
+    // 결제 확인 창
+    if (confirm("결제를 진행하시겠습니까?")) {
+        // 결제
+        $.ajax({
+            method: "GET",
+            url: "/order/orderAction",
+            data: {
+                mId: mId,
+                gId: gId,
+                oQty: oQty,
+                oPrice: oPrice
+            },
+            success: function(data) {
+                alert("주문이 완료되었습니다!!");
+                window.location.href = '/member/myPage?mId=' + mId; // 마이페이지로 이동
+            },
+            error: function() {
+                alert("주문 실패!!");
+            }
+        });
+    }
+});
+</script>
+</body>
+</html>

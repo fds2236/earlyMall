@@ -1,0 +1,251 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+	<!-- jqGrid CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+	<!-- The actual JQuery code -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
+	<!-- The JQuery UI code -->
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" /></script>
+	<!-- The jqGrid language file code-->
+	<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js" /></script>
+	<!-- The atual jqGrid code -->
+	<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js" /></script>
+	<script>
+	var mId = "${memberInfo.mId}";
+	var sign = "";
+//         $(document).ready(function() {
+//             // JqGrid 초기화 및 데이터 로드
+//             $("#cartList").jqGrid({
+//                 url: "/goods/basketList?mId=" + '${memberInfo.mId}',
+//                 datatype: "json",
+//                 colNames: ["상품사진", "상품명", "가격", "수량"],
+//                 colModel: [
+//                 	// name : 서버에서 받은 데이터의 변수명과 일치
+//                 	// index : 컬럼 정렬시 서버에 넘어가는 값
+//                 	// align : 컬럼 내 데이터의 정렬을 설정
+//                 	// hidden : 데이터값은 설정하고 화면에서 보이고 싶지 않을 때 사용
+//                 	// formatter : 데이터로 들어온 값을 특정 형식으로 변환해서 보여줌
+//                     { name: "G_IMG", index: "G_IMG", width: 100 },
+//                     { name: "G_NAME", index: "G_NAME", width: 200 },
+//                     { name: "G_PRICE", index: "G_PRICE", width: 100 , sorttype: 'number'},
+//                     { name: "B_QTY", index: "B_QTY", width: 100, sorttype: 'number'}
+//                 ],
+//                 pager: "#pager",
+//                 rowNum: 5, // 한 페이지에 표시할 행의 수를 설정하는 속성(초기)
+//                 rowList: [5, 10, 20], // 선택하여 페이지당 행의 개수를 설정(사용자가 설정)
+// //                rownumbers:true, // 행 번호 옵션 사용 여부
+//                 height: "auto",
+// //                 sortname: "G_PRICE", // G_PRICE 열을 기준으로 정렬
+// //                 sortorder: "asc", // 오름차순 정렬
+//                 autowidth: true,
+//                 viewrecords: true, // 총 레코드 수를 표시
+//                 loadtext : "로딩 중 -------------------------------", // 로딩할 때 문구
+// //                caption: "장바구니",
+//                 jsonReader: {
+//                     repeatitems: false,
+//                     root: "dataList",
+//                },
+//                // 데이터를 한 번만 로드하고 이후에는 클라이언트 측에서 데이터를 처리하는 옵션
+//                // 즉 서버에서 한 번의 요청으로 데이터를 받아와 클라이언트 측에서 모든 작업을 처리
+//                 loadonce: true,
+//                 loadComplete: function(data) {
+// //                     $(this).trigger("reloadGrid");
+//                 }
+//             });
+//         });
+
+		$(document).ready(function() {
+		    basketList(mId);
+		});
+
+		  function basketList(mId) {
+			    $.ajax({
+			      url: "/goods/basketList",
+			      type: "GET",
+			      data: {
+			        mId: mId
+			      },
+			      success: function(data) {
+			        console.log("비동기 통신 성공 : " + data.dataList);
+			        // 이렇게 수정할 예정
+// 			        var dataList = data.dataList;
+// 			        var list = "";
+// 		    		for(var i = 0; i < dataList.length; i++) {
+// 		    			list += "<tr>"
+// 		    				   + "<td>" + dataList[i].G_IMG + "</td>"
+// 		    			          + "<td>" + dataList[i].G_NAME + "</td>"
+// 		    			          + "<td>" + dataList[i].G_PRICE + "</td>"
+// 		    			          + "<td>" + dataList[i].B_QTY + "</td>"
+// 		    			          + "<td>" + (parseFloat(dataList[i].G_PRICE) * parseInt(dataList[i].B_QTY)) + "</td>"
+// 		    			          + "<td>삭제</td>"
+// 		    			          + "</tr>";
+// 		    			      }
+
+// 		    			      $("#cartList").html(list);
+// 		    			    }
+			       
+			        
+			        var cartListTable = $("<table>");
+			        var cartListTbody = $("<tbody>").attr("id", "cartList");
+			        var cartListDiv = $("#cartList");
+			        cartListDiv.empty(); // 이전에 추가된 상품 정보 삭제
+			        for (var i = 0; i < data.dataList.length; i++) {
+			          var item = data.dataList[i];
+			  //        var imgElement = $("<td>").html("<img src='" + item.G_IMG + "' alt='상품 사진' width='100'>"); // 상품 이미지
+			          var imgElement = $("<td>").text(item.G_IMG); // 상품 이미지 => 위 코드 사진이 없어서 에러라 잠깐 대체 중
+			          var nameElement = $("<td>").text(item.G_NAME); // 상품명
+			          var priceElement = $("<td>").text(item.G_PRICE); // 상품 가격
+			          var quantityElement = $("<td>").text(item.B_QTY); // 상품 수량
+			          var total = parseFloat(item.G_PRICE) * parseInt(item.B_QTY); // 총 가격 계산
+			          var totalElement = $("<td>").text(total); // 총 가격
+			          
+// 			          // +버튼 생성
+// 			          var buttonPElement = $("<button>")
+// 			            .text("+")
+// 			            .click(function() {
+// 			              sign = "plus";
+// 			              basketUpdate(item.G_ID);
+// 			            });
+			          
+// 			       	 // -버튼 생성
+// 			          var buttonMElement = $("<button>")
+// 			            .text("-")
+// 			            .click(function() {
+// 			            	sign = "minus";
+// 			              basketUpdate(item.G_ID);
+// 			            });
+
+			        // +버튼 생성
+			        var buttonPElement = $("<button>")
+			          .text("+")
+			          .click((function(itemId) {
+			            return function() {
+			              sign = "plus";
+			              basketUpdate(itemId);
+			            };
+			          })(item.G_ID));
+			
+			        // -버튼 생성
+			        var buttonMElement = $("<button>")
+			          .text("-")
+			          .prop("disabled", item.B_QTY === 1) // B_QTY가 1인 경우에는 비활성화
+			          .click((function(itemId) {
+			            return function() {
+			              sign = "minus";
+			              basketUpdate(itemId);
+			            };
+		         	 })(item.G_ID));
+			        
+			        // 주문, 삭제, 전체삭제 버튼 생성
+			        var orderButton = $("<button>")
+			          .text("주문")
+					var delButton = $("<button>")
+					  .text("삭제")
+					  .click((function(itemId) {
+					    return function() {
+					      basketDel(itemId);
+					    };
+					  })(item.G_ID));
+
+			        var delAllButton = $("<button>")
+		            .text("전체삭제")
+		            .click(function() {
+		              basketDel(null);
+		            });
+
+			          // 테이블 행 생성
+			          var tableRow = $("<tr>");
+			          tableRow.append(imgElement);
+			          tableRow.append(nameElement);
+			          tableRow.append(priceElement);
+			          tableRow.append(buttonMElement);
+			          tableRow.append(quantityElement);
+			          tableRow.append(buttonPElement);
+			          tableRow.append(totalElement);
+			          tableRow.append(orderButton);	
+			          tableRow.append(delButton);
+			          tableRow.append(delAllButton);
+			          cartListTbody.append(tableRow);
+			        } 
+			        cartListTable.append(cartListTbody);
+			        cartListDiv.append(cartListTable);
+			      }
+			    });
+			  }
+
+
+		function basketUpdate(itemId){
+			console.log("mId : " + mId);
+			console.log("itemId : " + itemId);
+			console.log("sign : " + sign);
+			$.ajax({
+				url:"/goods/basketQtyUpdate",
+				type:"POST",
+				data:{
+					mId:mId,
+	    			gId:itemId,
+	    			sign:sign
+				},
+				success: function(response) {
+	    			alert("해당 상품의 수량이 변경되었습니다.");
+	    			basketList(mId);
+	    		}
+			})
+		}
+
+		function basketDel(itemId){
+			console.log("itemId : " + itemId);
+			console.log("mId : " + mId);
+			// 삭제 기능 구현
+			$.ajax({
+				url:"/goods/basketDelete",
+				type:"POST",
+	    		data: {
+	    			mId:mId,
+	    			gId:itemId
+	    		},
+	    		success: function(response) {
+	    			alert("해당 상품이 장바구니에서 삭제되었습니다");
+	    			basketList(mId);
+	    		}
+			})
+		}
+		
+</script>
+
+</head>
+<body>
+    <h3>장바구니 페이지[로그인한 사람 : ${memberInfo.mId}]</h3>   
+<!--     <table id="cartList"></table> -->
+<!--     <div id="pager"></div> -->
+<div id="sort">
+<button>낮은가격순</button>
+<button>높은가격순</button>
+<button>최신순</button>
+</div>
+<br>
+<table>
+	<thead>
+		<tr>
+		<th>상품 사진</th>
+		<th>상품명</th>
+		<th>가격</th>
+		<th>수량</th>
+		<th>총 가격</th>
+		<th>삭제</th>
+		</tr>
+	</thead>
+	<tbody id="cartList">
+	</tbody>
+</table>
+
+<!-- <div id="cartList" class="cartList"> -->
+<!-- </div> -->
+
+</body>
+</html>

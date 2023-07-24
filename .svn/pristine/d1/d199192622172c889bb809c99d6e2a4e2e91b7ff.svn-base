@@ -1,0 +1,23 @@
+package com.eansoft.mall.member.service;
+
+import com.eansoft.mall.member.vo.MemberVo;
+
+public interface  MemberService {
+
+	/**
+	 * 로그인
+	 * @param memberVo
+	 * @return
+	 */
+	MemberVo login(MemberVo memberVo);
+	
+	int idCheck(String mId);
+	
+	int joinFromAdmin(MemberVo memberVo);
+	
+	MemberVo getMemberInfo(String mId);
+	
+	int updateMember(MemberVo memberVo);
+	
+	void deleteMember(String mId);
+}

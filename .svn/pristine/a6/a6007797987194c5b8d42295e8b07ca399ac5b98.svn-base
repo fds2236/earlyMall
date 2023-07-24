@@ -1,0 +1,52 @@
+package com.eansoft.mall.admin.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Mapper
+@Repository
+public interface AdminDao {
+
+	//최근 한달 회원가입 건수
+	public int getMonthMember();
+	//오늘 회원가입 건수
+	public int getTodayMember();
+	//최근 한달 총 주문 건수
+	public int getMonthOrder();
+	//오늘 총 주문 건수
+	public int getTodayOrder();
+	//최근 한달 이벤트 등록 건수
+	public int getMonthEvent();
+	//오늘 이벤트 등록 건수
+	public int getTodayEvent();
+	
+	
+	//상품관리 totalCount - tr
+	public int GoodsTotalCount();
+	
+	//상품관리목록 list - tr
+	public List<Map<String, Object>> GoodsList();
+
+	
+
+	//상품관리목록 list + 검색조건 -tr
+	public List<Map<String, Object>> GoodsSearchList2(Map<String, Object> map);
+	
+	
+	List<Map<String, Object>> getMemberList();
+
+
+	//구매관리
+	public List<Map<String, Object>> orderList(Map<String, Object> map);
+	
+
+	List<Map<String, Object>> getMemberList(@RequestParam("searchName") String searchName, @RequestParam("searchMobile") String searchMobile, @RequestParam("searchType") String searchType);
+
+
+	
+	
+}

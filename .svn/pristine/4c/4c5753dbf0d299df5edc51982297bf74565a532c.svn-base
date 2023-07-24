@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.admin.dao.AdminDao">
+   
+   <!-- 회원가입 건수 -->   
+   <select id="getMemberCnt" resultType="map">
+   	  SELECT TO_CHAR(REG_DT, 'yyyyMMdd') AS REG_DT
+        FROM MEMBER
+       WHERE TRUNC(REG_DT) >= TRUNC(SYSDATE) - 30
+   </select>
+
+   <select id="getMemberList" parameterType="com.eansoft.mall.member.vo.MemberVo" resultType="com.eansoft.mall.member.vo.MemberVo">
+      SELECT 
+      	M_ID,
+      	M_PASS,
+      	M_NAME,
+      	M_MOBILE,
+      	M_ADD_DEFAULT,
+      	M_ADD_DETAIL,
+      	M_DEL_YN,
+      	M_TYPE,
+      	MODIFY_DT,
+      	REG_DT
+      FROM MEMBER
+         WHERE 1=1
+            <if test="searchName != null and searchName != ''">
+            AND M_NAME LIKE '%'||#{searchName}||'%'         
+            </if>
+            <if test="searchMobile != null and searchMobile != ''">
+            AND M_MOBILE LIKE '%'||#{searchMobile}||'%'
+            </if>
+            <if test="searchType != null and searchType != ''">
+            AND M_TYPE LIKE '%'||#{searchType}||'%'
+            </if>
+         ORDER BY M_ID ASC
+   </select>
+
+   <!-- 총 주문 건수 -->
+   <select id="getOrderCnt" resultType="map">
+      SELECT TO_CHAR(O_DT, 'yyyyMMdd') AS O_DT
+        FROM ORDERS
+       WHERE TRUNC(O_DT) >= TRUNC(SYSDATE) - 30
+   </select>
+   
+   <!-- 이벤트 건수 -->
+   <select id="getEventCnt" resultType="map">
+      SELECT TO_CHAR(E_REG_DT, 'yyyyMMdd') AS E_REG_DT
+        FROM EVENT
+       WHERE TRUNC(E_REG_DT) >= TRUNC(SYSDATE) - 30
+   </select>
+
+
+   <!-- 상품관리 totalcount -->
+   <select id="GoodsTotalCount" resultType="int">
+      select count(*) from goods 
+   </select>
+   
+   
+   <!-- 상품관리 목록-->
+   <select id="GoodsList" resultType="java.util.Map">
+      select
+			G_id,
+			G_cate_cd,
+			G_name,
+			G_price,
+			G_qty,
+			G_img,
+			G_img_dtl,
+			G_show_YN,
+			G_del_YN,
+			modify_dt       
+      from goods        
+   </select>
+
+    <!-- 상품관리 목록 + 검색요건 -->
+   <select id="GoodsSearchList" resultType="java.util.Map" parameterType="map">
+      select 
+			G_id,
+			G_cate_cd,
+			G_name,
+			G_price,
+			G_qty,
+			G_img,
+			G_img_dtl,
+			G_show_YN,
+			G_del_YN,
+			modify_dt 
+      from goods
+      where 1=1      
+      <if test="gCateCd != null and !''.equals(gCateCd)"> <!-- 카테고리에 값이 들어왔을때, 전체''제외 -->
+        and g_cate_cd = #{gCateCd} 
+         <if test="searchKeyword != null and !''.equals(searchKeyword)"> <!--검색어가 ''가 아닐때-->   
+			and G_NAME like '%'||#{searchKeyword}||'%' 
+         </if>
+      </if>
+       <if test="''.equals(gCateCd)"> <!-- 카테고리에 값이 들어왔을때, 전체''제외 -->       
+         <if test="searchKeyword != null and !''.equals(searchKeyword)"> <!--검색어가 ''가 아닐때-->   
+			and G_NAME like '%'||#{searchKeyword}||'%' 
+         </if>
+      </if>    
+      <if test="gShowYn != null and !''.equals(gShowYn)"> <!--노출여부가 null이 아닐때 G_show_YN-->
+			and G_SHOW_YN = #{gShowYn}
+      </if>
+      <if test="gDelYn != null and !''.equals(gDelYn)"> <!--삭제여부가 null이 아닐때 G_del_YN-->
+			and G_DEL_YN = #{gDelYn}
+      </if>
+      ORDER BY g_id asc     
+   </select>
+   
+   
+   <!-- 주문관리 + 검색조건 -->
+   <select id="orderList" resultType="java.util.Map">
+      SELECT
+          o.O_ID,
+          m.M_ID,
+          m.M_NAME,
+          g.G_NAME,
+          o.O_DT,
+          o.O_QTY,
+          o.O_PRICE,
+          o.O_STEP,
+          o.O_COMP
+      FROM
+          ORDERS o, MEMBER m, GOODS g
+<!--           JOIN MEMBER m ON o.M_ID = m.M_ID -->
+<!--           JOIN GOODS g ON o.G_ID = g.G_ID -->
+      WHERE
+          1 = 1
+          and o.M_ID = m.M_ID
+          and o.G_ID = g.G_ID
+          
+          <if test="mName != null and mName != ''">
+              AND m.M_NAME LIKE '%'||#{mName}||'%'
+          </if>
+          <if test="gName != '' and gName != null">
+              AND g.G_NAME LIKE '%'||#{gName}||'%'
+          </if>
+<!--             <if test="oDt != null and oDt != ''">
+              AND o.O_DT = TO_DATE(SUBSTR(#{oDt}, 1, 10), 'YYYY-MM-DD')
+          </if>  --> 
+		  <if test="oDt != '' and oDt != null">
+			   <!--  AND o.O_DT BETWEEN TO_DATE(SUBSTR(#{oDt}, 1, 10), 'YYYY-MM-DD') AND TO_DATE(SUBSTR(#{oDt}, 14, 10), 'YYYY-MM-DD') -->
+			     AND o.O_DT BETWEEN SUBSTR(#{oDt}, 1, 10) AND SUBSTR(#{oDt}, 14, 10)
+			     
+		  </if> 
+
+          <if test="oStep != null and oStep != ''">
+<!--               <choose> -->
+<!--                   <when test="oStep == '10' or oStep == '20' or oStep == '30' or oStep == '40'"> -->
+                      AND o.O_STEP = #{oStep}
+<!--                   </when> -->
+<!--               </choose> -->
+          </if>
+          ORDER BY O_ID ASC
+      </select>
+      
+      <!-- 주문단계 업데이트 -->
+      <update id="updateOstep" parameterType="hashmap">
+         UPDATE ORDERS SET O_STEP=#{oStep} WHERE O_ID=#{oId}
+      </update>
+      
+      
+   <!-- 이벤트관리 -->
+   <select id="eventList" resultType="java.util.Map" parameterType="map">
+   	  SELECT 
+	     E_ID,
+	     E_NAME,
+	     E_ST_DT,
+	     E_END_DT,
+	     E_DEL_YN,
+	     MODIFY_DT,
+	     E_REG_DT
+	  FROM 
+	   	 EVENT
+	  WHERE 
+	  	 1 = 1
+	  	 <if test="searchName != null and !''.equals(searchName)">
+	  	 	AND E_NAME LIKE '%'||#{searchName}||'%'
+	  	 </if>
+		 <if test="searchStart != null and !''.equals(searchStart)">
+	  	 	AND E_ST_DT = #{eStDt}
+	  	 </if>
+	  	 <if test="searchEnd != null and !''.equals(searchEnd)">
+	  	 	AND E_END_DT = #{eEndDt}
+	  	 </if>
+	  	 <if test="eventDelYn != null and !''.equals(eventDelYn)">
+	  	 	AND E_DEL_YN = #{eDelYn}
+	  	 </if>
+	  ORDER BY E_ID ASC
+   </select>
+   
+   <!-- goods카테고리 가져오기 tr-->
+	<select id="getGoodsCate" resultType="map">
+		SELECT D_ID as dId
+			 , D_NAME as dName
+		  FROM CODE_DETAIL
+		 WHERE C_ID = '200'
+		 ORDER BY D_SORT
+	</select>
+	
+	<!-- goods 일괄노출 tr-->
+	<update id="doAllViewY" parameterType="int">
+		update goods set G_show_YN = 'Y' where G_ID = #{gId}
+	</update>
+	
+	<!-- goods 일괄비노출 tr-->
+	<update id="doAllViewN" parameterType="int">
+		update goods set G_show_YN = 'N' where G_ID = #{gId}
+	</update>
+		
+	<!-- goods 일괄삭제 tr-->
+	<update id="doAllDelY" parameterType="int">
+		update goods set G_DEL_YN = 'Y'  where G_ID = #{gId}
+	</update>
+	
+	<!-- goods 등록 -->
+	<insert id="insertGoods" parameterType="map">		
+		INSERT INTO GOODS 
+			(
+				G_CATE_CD, 
+				G_NAME, 
+				G_PRICE, 
+				G_QTY, 
+				G_IMG, 
+				G_IMG_DTL, 
+				G_SHOW_YN, 
+				G_DEL_YN, 
+				MODIFY_DT
+			)
+		VALUES 
+			(
+				#{gCateCd},
+				#{gName},
+				#{gPrice},
+				#{gQty},
+				#{gImg},
+				#{gImgDtl},
+				#{gShowYn},
+				#{gDelYn},
+				SYSDATE
+			)
+	</insert>
+
+	
+	<select id="getCodeGroup" resultType="java.util.Map" parameterType="map">
+		SELECT 
+			C_ID,
+			C_NAME,
+			C_COMMENT,
+			C_DEL_YN,
+			MODIFY_DT
+		FROM CODE_GROUP
+ 		WHERE 1=1
+        <if test="cName != '' and cName != null">
+              AND C_NAME LIKE '%'||#{cName}||'%'
+        </if>
+        <if test="cDelYn != null and !''.equals(cDelYn)">  
+			and C_DEL_YN = #{cDelYn}
+       </if>        
+	</select>
+	
+	<select id="getCodeDetail" resultType="java.util.Map" parameterType="map">
+		SELECT 
+			D_ID,
+			C_ID,
+			D_NAME,
+			D_SORT,
+			D_COMMENT,
+			D_DEL_YN,
+			MODIFY_DT
+		FROM CODE_DETAIL
+		where 1=1
+  		<if test="cId != '' and cId != null">
+			and C_ID=#{cId}
+		</if>  
+<!-- 		WHERE C_ID=#{cId}    -->   
+	</select>
+
+	
+	<update id="updateGoods" parameterType="map">
+		UPDATE goods
+			SET 
+				G_CATE_CD = #{gCateCd},
+				G_NAME = #{gName},
+				G_PRICE = #{gPrice},
+				G_QTY = #{gQty},
+				G_Img = #{gImg},
+				G_IMG_DTL = #{gImgDtl},
+				G_SHOW_YN = #{gShowYn},
+				G_DEL_YN = #{gDelYn},
+				MODIFY_DT = SYSDATE
+			WHERE
+				G_ID = #{gId}
+	</update>
+
+
+
+</mapper>
+
+

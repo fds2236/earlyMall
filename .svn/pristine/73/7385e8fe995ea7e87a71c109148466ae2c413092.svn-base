@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.order.dao.OrderDao">
+	
+<insert id ="orderAdd"  parameterType="Map">
+	insert into orders(M_ID, G_ID, O_DT, O_QTY, O_PRICE, O_STEP, O_DEL_YN) values(#{mId}, #{gId}, sysdate, #{oQty}, #{oPrice}, 20, 'N')
+</insert>
+
+<update id="orderAfterUpdateQty" parameterType="Map">
+    update goods
+    set g_qty = g_qty - #{oQty}
+    where G_ID = #{gId}
+</update>
+
+<delete id="orderAfterDeleteBasket" parameterType="Map">
+	delete from basket
+	where m_id = #{mId} and g_id = #{gId}
+</delete>
+
+
+</mapper>

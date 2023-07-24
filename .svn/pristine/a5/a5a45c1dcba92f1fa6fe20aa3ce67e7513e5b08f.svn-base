@@ -1,0 +1,37 @@
+package com.eansoft.mall.admin.service;
+
+import java.util.Map;
+
+public interface  AdminService {
+	Map<String, Object> getMemberList(String searchName, String searchMobile, String searchType);
+	
+	//최근 한달 회원가입 건수
+	public int getMonthMember();
+	
+	Map<String, Object> getAllMember();
+	
+	
+	//오늘 회원가입 건수
+	public int getTodayMember();
+	//최근 한달 총 주문 건수
+	public int getMonthOrder();
+	//오늘 총 주문 건수
+	public int getTodayOrder();
+	//최근 한달 이벤트 등록 건수
+	public int getMonthEvent();
+	//오늘 이벤트 등록 건수
+	public int getTodayEvent();
+
+	//상품리스트 - tr
+	Map<String, Object> getSearchGoodsList(Map<String, Object> map);
+
+	
+	//주문관리
+	Map<String, Object> getOrderList(Map<String, Object> map);
+	//Map<String, Object> getUpdate(Map<String, Object> map); // 주문단계 업데이트
+
+	
+	//이벤트관리
+	Map<String, Object> getEventList();
+
+}

@@ -1,0 +1,67 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+	<!-- jqGrid CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+	<!-- The actual JQuery code -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
+	<!-- The JQuery UI code -->
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" /></script>
+	<!-- The jqGrid language file code-->
+	<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js" /></script>
+	<!-- The atual jqGrid code -->
+	<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js" /></script>
+	<script>
+        $(document).ready(function() {
+            // JqGrid 초기화 및 데이터 로드
+            $("#cartList").jqGrid({
+                url: "/goods/basketList?mId=" + '${memberInfo.mId}',
+                datatype: "json",
+                colNames: ["상품사진", "상품명", "가격", "수량"],
+                colModel: [
+                	// name : 서버에서 받은 데이터의 변수명과 일치
+                	// index : 컬럼 정렬시 서버에 넘어가는 값
+                	// align : 컬럼 내 데이터의 정렬을 설정
+                	// hidden : 데이터값은 설정하고 화면에서 보이고 싶지 않을 때 사용
+                	// formatter : 데이터로 들어온 값을 특정 형식으로 변환해서 보여줌
+                    { name: "G_IMG", index: "G_IMG", width: 100 },
+                    { name: "G_NAME", index: "G_NAME", width: 200 },
+                    { name: "G_PRICE", index: "G_PRICE", width: 100 , sorttype: 'number'},
+                    { name: "B_QTY", index: "B_QTY", width: 100, sorttype: 'number'}
+                ],
+                pager: "#pager",
+                rowNum: 5, // 한 페이지에 표시할 행의 수를 설정하는 속성(초기)
+                rowList: [5, 10, 20], // 선택하여 페이지당 행의 개수를 설정(사용자가 설정)
+//                rownumbers:true, // 행 번호 옵션 사용 여부
+                height: "auto",
+//                 sortname: "G_PRICE", // G_PRICE 열을 기준으로 정렬
+//                 sortorder: "asc", // 오름차순 정렬
+                autowidth: true,
+                viewrecords: true, // 총 레코드 수를 표시
+                loadtext : "로딩 중 -------------------------------", // 로딩할 때 문구
+//                caption: "장바구니",
+                jsonReader: {
+                    repeatitems: false,
+                    root: "dataList",
+               },
+               // 데이터를 한 번만 로드하고 이후에는 클라이언트 측에서 데이터를 처리하는 옵션
+               // 즉 서버에서 한 번의 요청으로 데이터를 받아와 클라이언트 측에서 모든 작업을 처리
+                loadonce: true,
+                loadComplete: function(data) {
+//                     $(this).trigger("reloadGrid");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>장바구니 페이지</h1>
+    로그인한 사람 : ${memberInfo.mId}
+    <table id="cartList"></table>
+    <div id="pager"></div>
+</body>
+</html>

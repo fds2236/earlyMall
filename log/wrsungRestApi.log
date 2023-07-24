@@ -1,0 +1,355 @@
+2023-06-05 15:08:16.220 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Starting EarlyMallApplication using Java 17.0.7 on DESKTOP-SMSIM13 with PID 7216 (C:\workspace\earlyMall\target\classes started by RoyalG in C:\workspace\earlyMall)
+2023-06-05 15:08:16.220 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - No active profile set, falling back to 1 default profile: "default"
+2023-06-05 15:08:16.457 INFO  [restartedMain] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$f4137268] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-06-05 15:08:16.458 INFO  [restartedMain] [o.s.w.s.a.s.AnnotationActionEndpointMapping] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2023-06-05 15:08:16.485 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8080 (http)
+2023-06-05 15:08:16.485 INFO  [restartedMain] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2023-06-05 15:08:16.486 INFO  [restartedMain] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.75]
+2023-06-05 15:08:16.558 INFO  [restartedMain] [org.apache.jasper.servlet.TldScanner] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2023-06-05 15:08:16.560 INFO  [restartedMain] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2023-06-05 15:08:16.561 INFO  [restartedMain] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 339 ms
+2023-06-05 15:08:16.727 INFO  [restartedMain] [o.s.b.d.a.OptionalLiveReloadServer] - LiveReload server is running on port 35729
+2023-06-05 15:08:16.738 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8080 (http) with context path ''
+2023-06-05 15:08:16.743 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Started EarlyMallApplication in 0.58 seconds (JVM running for 2550.875)
+2023-06-05 15:08:16.744 INFO  [restartedMain] [o.s.b.d.a.ConditionEvaluationDeltaLoggingListener] - Condition evaluation unchanged
+2023-06-05 15:09:42.720 INFO  [File Watcher] [o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener] - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2023-06-05 15:09:42.738 INFO  [Thread-73] [org.apache.catalina.core.StandardService] - Stopping service [Tomcat]
+2023-06-05 15:09:42.838 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Starting EarlyMallApplication using Java 17.0.7 on DESKTOP-SMSIM13 with PID 7216 (C:\workspace\earlyMall\target\classes started by RoyalG in C:\workspace\earlyMall)
+2023-06-05 15:09:42.839 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - No active profile set, falling back to 1 default profile: "default"
+2023-06-05 15:09:43.066 INFO  [restartedMain] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$f4137268] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-06-05 15:09:43.067 INFO  [restartedMain] [o.s.w.s.a.s.AnnotationActionEndpointMapping] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2023-06-05 15:09:43.098 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8080 (http)
+2023-06-05 15:09:43.098 INFO  [restartedMain] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2023-06-05 15:09:43.099 INFO  [restartedMain] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.75]
+2023-06-05 15:09:43.181 INFO  [restartedMain] [org.apache.jasper.servlet.TldScanner] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2023-06-05 15:09:43.184 INFO  [restartedMain] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2023-06-05 15:09:43.184 INFO  [restartedMain] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 343 ms
+2023-06-05 15:09:43.318 INFO  [restartedMain] [o.s.b.d.a.OptionalLiveReloadServer] - LiveReload server is running on port 35729
+2023-06-05 15:09:43.332 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8080 (http) with context path ''
+2023-06-05 15:09:43.337 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Started EarlyMallApplication in 0.534 seconds (JVM running for 2637.47)
+2023-06-05 15:09:43.339 INFO  [restartedMain] [o.s.b.d.a.ConditionEvaluationDeltaLoggingListener] - Condition evaluation unchanged
+2023-06-05 15:10:55.977 INFO  [File Watcher] [o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener] - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2023-06-05 15:10:55.997 INFO  [Thread-77] [org.apache.catalina.core.StandardService] - Stopping service [Tomcat]
+2023-06-05 15:10:56.102 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Starting EarlyMallApplication using Java 17.0.7 on DESKTOP-SMSIM13 with PID 7216 (C:\workspace\earlyMall\target\classes started by RoyalG in C:\workspace\earlyMall)
+2023-06-05 15:10:56.102 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - No active profile set, falling back to 1 default profile: "default"
+2023-06-05 15:10:56.291 INFO  [restartedMain] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$f4137268] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-06-05 15:10:56.291 INFO  [restartedMain] [o.s.w.s.a.s.AnnotationActionEndpointMapping] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2023-06-05 15:10:56.318 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8080 (http)
+2023-06-05 15:10:56.318 INFO  [restartedMain] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2023-06-05 15:10:56.318 INFO  [restartedMain] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.75]
+2023-06-05 15:10:56.391 INFO  [restartedMain] [org.apache.jasper.servlet.TldScanner] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2023-06-05 15:10:56.393 INFO  [restartedMain] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2023-06-05 15:10:56.393 INFO  [restartedMain] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 288 ms
+2023-06-05 15:10:56.523 INFO  [restartedMain] [o.s.b.d.a.OptionalLiveReloadServer] - LiveReload server is running on port 35729
+2023-06-05 15:10:56.536 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8080 (http) with context path ''
+2023-06-05 15:10:56.542 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Started EarlyMallApplication in 0.48 seconds (JVM running for 2710.675)
+2023-06-05 15:10:56.544 INFO  [restartedMain] [o.s.b.d.a.ConditionEvaluationDeltaLoggingListener] - Condition evaluation unchanged
+2023-06-05 15:11:09.157 INFO  [http-nio-8080-exec-2] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-06-05 15:11:09.157 INFO  [http-nio-8080-exec-2] [o.s.web.servlet.DispatcherServlet] - Initializing Servlet 'dispatcherServlet'
+2023-06-05 15:11:09.158 INFO  [http-nio-8080-exec-2] [o.s.web.servlet.DispatcherServlet] - Completed initialization in 1 ms
+2023-06-05 15:11:20.177 INFO  [http-nio-8080-exec-3] [com.zaxxer.hikari.HikariDataSource] - HikariPool-3 - Starting...
+2023-06-05 15:11:20.263 INFO  [http-nio-8080-exec-3] [jdbc.connection] - 21. Connection opened
+2023-06-05 15:11:20.263 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.new Connection returned 
+2023-06-05 15:11:20.263 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.getNetworkTimeout() returned 0
+2023-06-05 15:11:20.263 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.263 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.264 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.isValid(1) returned true
+2023-06-05 15:11:20.264 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.getTransactionIsolation() returned 2
+2023-06-05 15:11:20.264 INFO  [http-nio-8080-exec-3] [com.zaxxer.hikari.HikariDataSource] - HikariPool-3 - Start completed.
+2023-06-05 15:11:20.264 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.264 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. PreparedStatement.new PreparedStatement returned 
+2023-06-05 15:11:20.264 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.prepareStatement(SELECT M_ID
+			 , M_PASS
+			 , M_NAME
+			 , M_MOBILE
+			 , M_ADD_DEFAULT
+			 , M_ADD_DETAIL
+		  FROM MEMBER
+		 WHERE M_ID = ?
+		   AND M_PASS = ?
+		   AND M_DEL_YN = 'N') returned net.sf.log4jdbc.sql.jdbcapi.PreparedStatementSpy@6acef7b6
+2023-06-05 15:11:20.265 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. PreparedStatement.setString(1, "admin") returned 
+2023-06-05 15:11:20.265 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. PreparedStatement.setString(2, "1111") returned 
+2023-06-05 15:11:20.265 INFO  [http-nio-8080-exec-3] [jdbc.sqlonly] - SELECT M_ID
+			 , M_PASS
+			 , M_NAME
+			 , M_MOBILE
+			 , M_ADD_DEFAULT
+			 , M_ADD_DETAIL
+		  FROM MEMBER
+		 WHERE M_ID = 'admin'
+		   AND M_PASS = '1111'
+		   AND M_DEL_YN = 'N'
+
+2023-06-05 15:11:20.266 INFO  [http-nio-8080-exec-3] [jdbc.sqltiming] - SELECT M_ID
+			 , M_PASS
+			 , M_NAME
+			 , M_MOBILE
+			 , M_ADD_DEFAULT
+			 , M_ADD_DETAIL
+		  FROM MEMBER
+		 WHERE M_ID = 'admin'
+		   AND M_PASS = '1111'
+		   AND M_DEL_YN = 'N'
+ {executed in 0 msec}
+2023-06-05 15:11:20.266 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. PreparedStatement.execute() returned true
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.new ResultSet returned 
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. PreparedStatement.getResultSet() returned net.sf.log4jdbc.sql.jdbcapi.ResultSetSpy@1d839766
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getMetaData() returned oracle.jdbc.driver.OracleResultSetMetaData@2831d55c
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getType() returned 1003
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.isClosed() returned false
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.next() returned true
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getString(M_ID) returned admin
+2023-06-05 15:11:20.267 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getString(M_PASS) returned 1111
+2023-06-05 15:11:20.268 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getString(M_NAME) returned 관리자
+2023-06-05 15:11:20.268 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getString(M_MOBILE) returned void
+2023-06-05 15:11:20.268 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getString(M_ADD_DEFAULT) returned void
+2023-06-05 15:11:20.268 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.getString(M_ADD_DETAIL) returned void
+2023-06-05 15:11:20.268 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.isClosed() returned false
+2023-06-05 15:11:20.269 INFO  [http-nio-8080-exec-3] [jdbc.resultsettable] - 
+|------|-------|-------|---------|--------------|-------------|
+|m_id  |m_pass |m_name |m_mobile |m_add_default |m_add_detail |
+|------|-------|-------|---------|--------------|-------------|
+|admin |1111   |관리자    |null     |null          |null         |
+|------|-------|-------|---------|--------------|-------------|
+
+2023-06-05 15:11:20.269 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.next() returned false
+2023-06-05 15:11:20.269 INFO  [http-nio-8080-exec-3] [jdbc.resultset] - 21. ResultSet.close() returned void
+2023-06-05 15:11:20.269 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.getMetaData() returned oracle.jdbc.driver.OracleDatabaseMetaData@456965d9
+2023-06-05 15:11:20.269 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. PreparedStatement.close() returned 
+2023-06-05 15:11:20.269 INFO  [http-nio-8080-exec-3] [jdbc.audit] - 21. Connection.clearWarnings() returned 
+2023-06-05 15:11:20.436 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 22. Connection opened
+2023-06-05 15:11:20.436 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 22. Connection.new Connection returned 
+2023-06-05 15:11:20.436 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 22. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.436 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 22. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.492 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 23. Connection opened
+2023-06-05 15:11:20.492 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 23. Connection.new Connection returned 
+2023-06-05 15:11:20.492 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 23. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.492 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 23. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.541 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 24. Connection opened
+2023-06-05 15:11:20.541 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 24. Connection.new Connection returned 
+2023-06-05 15:11:20.541 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 24. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.541 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 24. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.591 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 25. Connection opened
+2023-06-05 15:11:20.591 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 25. Connection.new Connection returned 
+2023-06-05 15:11:20.591 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 25. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.591 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 25. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.645 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 26. Connection opened
+2023-06-05 15:11:20.646 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 26. Connection.new Connection returned 
+2023-06-05 15:11:20.646 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 26. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.646 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 26. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.693 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 27. Connection opened
+2023-06-05 15:11:20.693 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 27. Connection.new Connection returned 
+2023-06-05 15:11:20.693 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 27. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.693 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 27. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.738 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 28. Connection opened
+2023-06-05 15:11:20.738 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 28. Connection.new Connection returned 
+2023-06-05 15:11:20.738 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 28. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.738 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 28. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.791 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 29. Connection opened
+2023-06-05 15:11:20.791 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 29. Connection.new Connection returned 
+2023-06-05 15:11:20.792 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 29. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.792 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 29. Connection.getAutoCommit() returned true
+2023-06-05 15:11:20.841 INFO  [HikariPool-3 connection adder] [jdbc.connection] - 30. Connection opened
+2023-06-05 15:11:20.841 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 30. Connection.new Connection returned 
+2023-06-05 15:11:20.842 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 30. Connection.isReadOnly() returned false
+2023-06-05 15:11:20.842 INFO  [HikariPool-3 connection adder] [jdbc.audit] - 30. Connection.getAutoCommit() returned true
+2023-06-05 15:11:22.949 INFO  [http-nio-8080-exec-5] [c.e.m.member.controller.MemberController] - mid data = admin
+2023-06-05 15:13:06.165 INFO  [File Watcher] [o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener] - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2023-06-05 15:13:06.185 INFO  [Thread-81] [org.apache.catalina.core.StandardService] - Stopping service [Tomcat]
+2023-06-05 15:13:06.185 INFO  [Thread-81] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Destroying Spring FrameworkServlet 'dispatcherServlet'
+2023-06-05 15:13:06.188 WARN  [Thread-81] [o.a.c.loader.WebappClassLoaderBase] - The web application [ROOT] appears to have started a thread named [HikariPool-3 housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.7/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+ java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+ java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+2023-06-05 15:13:06.190 INFO  [Thread-81] [com.zaxxer.hikari.HikariDataSource] - HikariPool-3 - Shutdown initiated...
+2023-06-05 15:13:06.191 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 21. Connection closed
+2023-06-05 15:13:06.192 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 21. Connection.close() returned 
+2023-06-05 15:13:06.192 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 22. Connection closed
+2023-06-05 15:13:06.192 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 22. Connection.close() returned 
+2023-06-05 15:13:06.193 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 23. Connection closed
+2023-06-05 15:13:06.193 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 23. Connection.close() returned 
+2023-06-05 15:13:06.195 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 24. Connection closed
+2023-06-05 15:13:06.195 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 24. Connection.close() returned 
+2023-06-05 15:13:06.196 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 25. Connection closed
+2023-06-05 15:13:06.196 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 25. Connection.close() returned 
+2023-06-05 15:13:06.197 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 26. Connection closed
+2023-06-05 15:13:06.197 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 26. Connection.close() returned 
+2023-06-05 15:13:06.198 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 27. Connection closed
+2023-06-05 15:13:06.199 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 27. Connection.close() returned 
+2023-06-05 15:13:06.200 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 28. Connection closed
+2023-06-05 15:13:06.200 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 28. Connection.close() returned 
+2023-06-05 15:13:06.201 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 29. Connection closed
+2023-06-05 15:13:06.201 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 29. Connection.close() returned 
+2023-06-05 15:13:06.202 INFO  [HikariPool-3 connection closer] [jdbc.connection] - 30. Connection closed
+2023-06-05 15:13:06.203 INFO  [HikariPool-3 connection closer] [jdbc.audit] - 30. Connection.close() returned 
+2023-06-05 15:13:06.204 INFO  [Thread-81] [com.zaxxer.hikari.HikariDataSource] - HikariPool-3 - Shutdown completed.
+2023-06-05 15:13:06.304 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Starting EarlyMallApplication using Java 17.0.7 on DESKTOP-SMSIM13 with PID 7216 (C:\workspace\earlyMall\target\classes started by RoyalG in C:\workspace\earlyMall)
+2023-06-05 15:13:06.305 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - No active profile set, falling back to 1 default profile: "default"
+2023-06-05 15:13:06.514 INFO  [restartedMain] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$f4137268] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-06-05 15:13:06.515 INFO  [restartedMain] [o.s.w.s.a.s.AnnotationActionEndpointMapping] - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2023-06-05 15:13:06.558 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8080 (http)
+2023-06-05 15:13:06.559 INFO  [restartedMain] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2023-06-05 15:13:06.559 INFO  [restartedMain] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.75]
+2023-06-05 15:13:06.668 INFO  [restartedMain] [org.apache.jasper.servlet.TldScanner] - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2023-06-05 15:13:06.672 INFO  [restartedMain] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2023-06-05 15:13:06.672 INFO  [restartedMain] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 365 ms
+2023-06-05 15:13:06.861 INFO  [restartedMain] [o.s.b.d.a.OptionalLiveReloadServer] - LiveReload server is running on port 35729
+2023-06-05 15:13:06.876 INFO  [restartedMain] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8080 (http) with context path ''
+2023-06-05 15:13:06.881 INFO  [restartedMain] [com.eansoft.mall.EarlyMallApplication] - Started EarlyMallApplication in 0.615 seconds (JVM running for 2841.014)
+2023-06-05 15:13:06.882 INFO  [restartedMain] [o.s.b.d.a.ConditionEvaluationDeltaLoggingListener] - Condition evaluation unchanged
+2023-06-05 15:13:08.319 INFO  [http-nio-8080-exec-1] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-06-05 15:13:08.319 INFO  [http-nio-8080-exec-1] [o.s.web.servlet.DispatcherServlet] - Initializing Servlet 'dispatcherServlet'
+2023-06-05 15:13:08.320 INFO  [http-nio-8080-exec-1] [o.s.web.servlet.DispatcherServlet] - Completed initialization in 1 ms
+2023-06-05 15:13:08.321 INFO  [http-nio-8080-exec-1] [c.e.m.member.controller.MemberController] - mid data = admin
+2023-06-05 15:13:08.322 INFO  [http-nio-8080-exec-1] [c.e.m.member.controller.MemberController] - memberInfo data = null
+2023-06-05 15:13:10.018 INFO  [http-nio-8080-exec-2] [c.e.m.member.controller.MemberController] - mid data = admin
+2023-06-05 15:13:10.019 INFO  [http-nio-8080-exec-2] [c.e.m.member.controller.MemberController] - memberInfo data = null
+2023-06-05 15:13:24.024 INFO  [http-nio-8080-exec-5] [com.zaxxer.hikari.HikariDataSource] - HikariPool-4 - Starting...
+2023-06-05 15:13:24.073 INFO  [http-nio-8080-exec-5] [jdbc.connection] - 31. Connection opened
+2023-06-05 15:13:24.073 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.new Connection returned 
+2023-06-05 15:13:24.073 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.getNetworkTimeout() returned 0
+2023-06-05 15:13:24.073 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.074 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.074 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.isValid(1) returned true
+2023-06-05 15:13:24.074 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.getTransactionIsolation() returned 2
+2023-06-05 15:13:24.074 INFO  [http-nio-8080-exec-5] [com.zaxxer.hikari.HikariDataSource] - HikariPool-4 - Start completed.
+2023-06-05 15:13:24.075 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.075 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. PreparedStatement.new PreparedStatement returned 
+2023-06-05 15:13:24.075 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.prepareStatement(SELECT M_ID
+			 , M_PASS
+			 , M_NAME
+			 , M_MOBILE
+			 , M_ADD_DEFAULT
+			 , M_ADD_DETAIL
+		  FROM MEMBER
+		 WHERE M_ID = ?
+		   AND M_PASS = ?
+		   AND M_DEL_YN = 'N') returned net.sf.log4jdbc.sql.jdbcapi.PreparedStatementSpy@3e92da3d
+2023-06-05 15:13:24.075 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. PreparedStatement.setString(1, "admin") returned 
+2023-06-05 15:13:24.075 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. PreparedStatement.setString(2, "1111") returned 
+2023-06-05 15:13:24.075 INFO  [http-nio-8080-exec-5] [jdbc.sqlonly] - SELECT M_ID
+			 , M_PASS
+			 , M_NAME
+			 , M_MOBILE
+			 , M_ADD_DEFAULT
+			 , M_ADD_DETAIL
+		  FROM MEMBER
+		 WHERE M_ID = 'admin'
+		   AND M_PASS = '1111'
+		   AND M_DEL_YN = 'N'
+
+2023-06-05 15:13:24.076 INFO  [http-nio-8080-exec-5] [jdbc.sqltiming] - SELECT M_ID
+			 , M_PASS
+			 , M_NAME
+			 , M_MOBILE
+			 , M_ADD_DEFAULT
+			 , M_ADD_DETAIL
+		  FROM MEMBER
+		 WHERE M_ID = 'admin'
+		   AND M_PASS = '1111'
+		   AND M_DEL_YN = 'N'
+ {executed in 1 msec}
+2023-06-05 15:13:24.076 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. PreparedStatement.execute() returned true
+2023-06-05 15:13:24.076 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.new ResultSet returned 
+2023-06-05 15:13:24.076 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. PreparedStatement.getResultSet() returned net.sf.log4jdbc.sql.jdbcapi.ResultSetSpy@29de93ab
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getMetaData() returned oracle.jdbc.driver.OracleResultSetMetaData@2894a5a3
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getType() returned 1003
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.isClosed() returned false
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.next() returned true
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getString(M_ID) returned admin
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getString(M_PASS) returned 1111
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getString(M_NAME) returned 관리자
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getString(M_MOBILE) returned void
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getString(M_ADD_DEFAULT) returned void
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.getString(M_ADD_DETAIL) returned void
+2023-06-05 15:13:24.077 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.isClosed() returned false
+2023-06-05 15:13:24.078 INFO  [http-nio-8080-exec-5] [jdbc.resultsettable] - 
+|------|-------|-------|---------|--------------|-------------|
+|m_id  |m_pass |m_name |m_mobile |m_add_default |m_add_detail |
+|------|-------|-------|---------|--------------|-------------|
+|admin |1111   |관리자    |null     |null          |null         |
+|------|-------|-------|---------|--------------|-------------|
+
+2023-06-05 15:13:24.078 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.next() returned false
+2023-06-05 15:13:24.078 INFO  [http-nio-8080-exec-5] [jdbc.resultset] - 31. ResultSet.close() returned void
+2023-06-05 15:13:24.078 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.getMetaData() returned oracle.jdbc.driver.OracleDatabaseMetaData@37ac6b5
+2023-06-05 15:13:24.078 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. PreparedStatement.close() returned 
+2023-06-05 15:13:24.078 INFO  [http-nio-8080-exec-5] [jdbc.audit] - 31. Connection.clearWarnings() returned 
+2023-06-05 15:13:24.244 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 32. Connection opened
+2023-06-05 15:13:24.244 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 32. Connection.new Connection returned 
+2023-06-05 15:13:24.244 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 32. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.244 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 32. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.295 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 33. Connection opened
+2023-06-05 15:13:24.295 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 33. Connection.new Connection returned 
+2023-06-05 15:13:24.295 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 33. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.295 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 33. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.346 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 34. Connection opened
+2023-06-05 15:13:24.346 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 34. Connection.new Connection returned 
+2023-06-05 15:13:24.346 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 34. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.346 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 34. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.404 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 35. Connection opened
+2023-06-05 15:13:24.404 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 35. Connection.new Connection returned 
+2023-06-05 15:13:24.404 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 35. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.404 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 35. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.456 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 36. Connection opened
+2023-06-05 15:13:24.456 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 36. Connection.new Connection returned 
+2023-06-05 15:13:24.456 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 36. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.456 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 36. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.508 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 37. Connection opened
+2023-06-05 15:13:24.508 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 37. Connection.new Connection returned 
+2023-06-05 15:13:24.508 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 37. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.508 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 37. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.566 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 38. Connection opened
+2023-06-05 15:13:24.566 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 38. Connection.new Connection returned 
+2023-06-05 15:13:24.566 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 38. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.566 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 38. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.622 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 39. Connection opened
+2023-06-05 15:13:24.622 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 39. Connection.new Connection returned 
+2023-06-05 15:13:24.622 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 39. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.622 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 39. Connection.getAutoCommit() returned true
+2023-06-05 15:13:24.673 INFO  [HikariPool-4 connection adder] [jdbc.connection] - 40. Connection opened
+2023-06-05 15:13:24.673 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 40. Connection.new Connection returned 
+2023-06-05 15:13:24.673 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 40. Connection.isReadOnly() returned false
+2023-06-05 15:13:24.673 INFO  [HikariPool-4 connection adder] [jdbc.audit] - 40. Connection.getAutoCommit() returned true
+2023-06-05 15:14:43.137 INFO  [File Watcher] [o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener] - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2023-06-05 15:14:43.154 INFO  [Thread-86] [org.apache.catalina.core.StandardService] - Stopping service [Tomcat]
+2023-06-05 15:14:43.154 INFO  [Thread-86] [o.a.c.c.C.[Tomcat-2].[localhost].[/]] - Destroying Spring FrameworkServlet 'dispatcherServlet'
+2023-06-05 15:14:43.157 WARN  [Thread-86] [o.a.c.loader.WebappClassLoaderBase] - The web application [ROOT] appears to have started a thread named [HikariPool-4 housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.7/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+ java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+ java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+2023-06-05 15:14:43.159 INFO  [Thread-86] [com.zaxxer.hikari.HikariDataSource] - HikariPool-4 - Shutdown initiated...
+2023-06-05 15:14:43.160 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 31. Connection closed
+2023-06-05 15:14:43.160 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 31. Connection.close() returned 
+2023-06-05 15:14:43.161 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 32. Connection closed
+2023-06-05 15:14:43.162 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 32. Connection.close() returned 
+2023-06-05 15:14:43.163 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 33. Connection closed
+2023-06-05 15:14:43.163 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 33. Connection.close() returned 
+2023-06-05 15:14:43.164 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 34. Connection closed
+2023-06-05 15:14:43.164 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 34. Connection.close() returned 
+2023-06-05 15:14:43.165 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 35. Connection closed
+2023-06-05 15:14:43.165 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 35. Connection.close() returned 
+2023-06-05 15:14:43.166 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 36. Connection closed
+2023-06-05 15:14:43.166 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 36. Connection.close() returned 
+2023-06-05 15:14:43.167 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 37. Connection closed
+2023-06-05 15:14:43.168 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 37. Connection.close() returned 
+2023-06-05 15:14:43.169 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 38. Connection closed
+2023-06-05 15:14:43.169 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 38. Connection.close() returned 
+2023-06-05 15:14:43.170 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 39. Connection closed
+2023-06-05 15:14:43.170 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 39. Connection.close() returned 
+2023-06-05 15:14:43.171 INFO  [HikariPool-4 connection closer] [jdbc.connection] - 40. Connection closed
+2023-06-05 15:14:43.172 INFO  [HikariPool-4 connection closer] [jdbc.audit] - 40. Connection.close() returned 
+2023-06-05 15:14:43.172 INFO  [Thread-86] [com.zaxxer.hikari.HikariDataSource] - HikariPool-4 - Shutdown completed.

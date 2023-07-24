@@ -1,0 +1,10 @@
+package com.eansoft.mall.order.service.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.eansoft.mall.admin.service.AdminService;
+
+@Service
+public class OrderServiceImpl implements AdminService {
+
+}

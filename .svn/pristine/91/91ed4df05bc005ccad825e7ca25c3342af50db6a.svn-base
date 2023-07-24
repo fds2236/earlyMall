@@ -1,0 +1,70 @@
+package com.eansoft.mall.admin.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Mapper
+@Repository
+public interface AdminDao {
+
+	//회원가입 건수
+//	public int getMonthMember();
+	List<Map<String, Object>> getMemberCnt();
+	
+	//총 주문 건수
+	List<Map<String, Object>> getOrderCnt();
+	
+	//이벤트 등록 건수
+	List<Map<String, Object>> getEventCnt();
+	
+	
+	//상품관리 totalCount - tr
+	int GoodsTotalCount();
+	
+	//상품관리목록 list - tr
+	List<Map<String, Object>> GoodsList();	
+
+	//상품관리목록 list + 검색조건 -tr
+	List<Map<String, Object>> GoodsSearchList(Map<String, Object> map);
+
+
+	//구매관리
+	List<Map<String, Object>> orderList(Map<String, Object> map);
+	
+	// 주문단계 업데이트
+	//int updateOstep(@RequestParam("oStep")String oStep, @RequestParam("oId") String oId); 
+	int updateOstep(Map<String, Object> map);
+	
+	//회원관리
+	List<Map<String, Object>> getMemberList(Map<String, Object> memberMap);
+
+	
+	//이벤트관리
+	List<Map<String, Object>> eventList(Map<String, Object> eventMap);
+	
+	//상품관리목록 굿즈 카테고리 가져오기 -tr
+	List<Map<String, Object>> getGoodsCate();
+	
+	//상품관리 일괄노출 - tr
+	int doAllViewY(int gId);
+	
+	//상품관리  !일괄비노출 - tr
+	int doAllViewN(int gId);
+	
+	//상품관리 일괄삭제 - tr
+	int doAllDelY(int gId);
+	
+	//상품관리 상품등록 -tr
+	void insertGoods(Map<String, Object> map);
+	
+	//공통코드관리 그룹
+	List<Map<String, Object>> getCodeGroup(Map<String, Object> map);
+	//공통코드관리 상세
+	List<Map<String, Object>> getCodeDetail(Map<String, Object> map);
+
+	int updateGoods(Map<String, Object> map); 
+}

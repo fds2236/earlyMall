@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.main.dao.MainDao">
+
+	<select id="getAdminCate" resultType="hashmap">
+		SELECT D_ID as dId
+			 , D_NAME as dName
+		  FROM CODE_DETAIL
+		 WHERE C_ID = '400'
+		 ORDER BY D_SORT
+	</select>
+	
+	
+</mapper>

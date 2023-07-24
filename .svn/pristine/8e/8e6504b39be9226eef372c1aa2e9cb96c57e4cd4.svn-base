@@ -1,0 +1,63 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="EUC-KR">
+	<title>ADMIN</title>
+	<style type="text/css">
+		ul{
+			display: flex; list-style: none;
+		}
+		li{
+			text-align: center; 
+			margin-right: 30px; 
+			border: 1px solid #000;
+			width: 300px;
+			height: 300px;
+		}
+		li>p{
+			line-height: 150px;
+		}
+	</style>
+</head>
+<body>
+<jsp:include page="../import/adminFrame.jsp"/>
+	<div style="float:left;">
+		
+		<ul>
+			<li>
+				<p>10</p>
+				<p>오늘 회원 가입 건수</p>
+			</li>
+			<li>
+				<p>12</p>
+				<p>오늘 총 주문 건수</p>
+			</li>
+			<li>
+				<p>2</p>
+				<p>오늘 등록된 이벤트 건수</p>
+			</li>
+		</ul>
+		<ul>
+			<li>
+				<p>40</p>
+				<p>최근 한달간 회원 가입 건수</p>
+			</li>
+			<li>
+				<p>115</p>
+				<p>최근 한달간 총 주문 건수</p>
+			</li>
+			<li>
+				<p>14</p>
+				<p>최근 한달간 등록된 이벤트 건수</p>
+			</li>
+		</ul>
+	</div>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+package com.eansoft.mall.goods.service.impl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eansoft.mall.goods.dao.GoodsDao;
+import com.eansoft.mall.goods.service.GoodsService;
+
+
+@Service
+public class GoodsServiceImpl implements GoodsService {
+	
+	@Autowired
+	private GoodsDao goodsDao;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Override
+	public Map<String, Object> getBasketList(Map<String, Object> map) {
+		// 데이터 개수 구하기
+		String mId = (String) map.get("mId");
+		int countBasket = goodsDao.countBasket(mId);
+		logger.info("총 데이터 개수 : " + countBasket);
+		
+		// 데이터 조회하기
+		int amount = 5; // 데이터 5개씩 출력
+		int totalPages = (int) Math.ceil((double) countBasket / amount);
+		map.put("amount", amount);
+		logger.info("조회 쿼리로 보낼 값들 : " + map);
+		List<Map<String, Object>> dataList = goodsDao.basketList(map);
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("dataList", dataList); 
+	    resultMap.put("totalPages", totalPages);
+		return resultMap;
+	}
+
+	@Override
+	public boolean getBasketCheck(String mId, String gId) {
+		String basketCheck = goodsDao.basketCheck(mId, gId);
+		if(basketCheck != null) {
+			return true;
+		} else return false;
+	}
+
+	@Override
+	public int getBasketAdd(Map<String, Object> map) {
+		int result = goodsDao.basketAdd(map);
+		return result;
+	}
+
+	 @Override
+	 public int getBasketQtyUpdate(List<Map<String, Object>> saveList) {
+	     logger.info("서비스 임플에서 받은 saveList: " + saveList);
+	     int result = 0;
+	     for (Map<String, Object> map : saveList) {
+	         String mId = (String) map.get("mId");
+	         String gId = (String) map.get("gId");
+	         String bQty = (String) map.get("bQty");
+	
+	         // basketQtyUpdate 메소드 호출
+	         Map<String, Object> params = new HashMap<>();
+	         params.put("mId", mId);
+	         params.put("gId", gId);
+	         params.put("bQty", bQty);
+	         logger.info("sql문 보낼 값들: " + params);
+	         result += goodsDao.basketQtyUpdate(params);
+	         logger.info("basketQtyUpdate 결과: " + result);
+	     }
+	     return result;
+	  }
+
+	@Override
+	public int getBasketDel(String mId, String gId) {
+		int result = goodsDao.basketDel(mId, gId);
+		return result;
+	}
+	
+	
+
+	
+	
+	
+	
+
+	
+	
+	
+
+}

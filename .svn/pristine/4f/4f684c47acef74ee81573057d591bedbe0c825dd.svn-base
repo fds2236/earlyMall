@@ -1,0 +1,14 @@
+package com.eansoft.mall.goods.service;
+
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+public interface  GoodsService {
+//	Map<String, Object> getBasketList(String m_id, String sortType, int page);
+	Map<String, Object> getBasketList(Map<String, Object> map);
+	boolean getBasketCheck(String mId, String gId);
+	int getBasketAdd(Map<String, Object> map);
+	int getBasketQtyUpdate(Map<String, Object> map);
+	int getBasketDel(String mId, String gId); // 장바구니 삭제
+}

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.goods.dao.GoodsDao">
+	<select id="countBasket" resultType="int">
+		select count(*) from basket where m_id = #{mId}
+	</select>
+	
+	<select id="basketList" resultType="Map">
+		SELECT b_qty, g_id, g_name, g_price, eg_price, g_img, g_qty, rn
+		FROM (
+		    SELECT rownum AS rn, sub.*
+		    FROM (
+		        SELECT b.b_qty
+		             , b.g_id
+		             , g.g_name
+		             , g.g_price
+		             , g.g_img
+		             , g.g_qty
+		             , eg.eg_price
+		             , NVL(eg.eg_price,g.g_price) AS sort_price
+		        FROM basket b
+		        JOIN goods g ON b.g_id = g.g_id
+		       LEFT JOIN (
+		            SELECT eg.g_id, eg.eg_price
+		            FROM event_goods eg
+		            JOIN event e ON eg.e_id = e.e_id
+		            WHERE sysdate between e.e_st_dt and e.e_end_dt
+		        ) eg ON g.g_id = eg.g_id
+		        WHERE b.m_id = #{mId}
+		        ORDER BY
+		        <choose>
+					<when test="sortType == 'highPrice'">
+						sort_price desc
+					</when>
+					<when test="sortType == 'lowPrice'">
+						sort_price
+					</when>
+					<when test="sortType == 'latestReg'">
+						b.reg_dt desc
+					</when>
+				</choose>		       
+		    ) sub
+		)
+		WHERE rn > (#{page}-1) * #{amount} AND rn <![CDATA[ <=]]> #{page} * #{amount}
+	</select>
+		
+	<select id="basketCheck" parameterType="Map">
+		select m_id, g_id from basket where m_id=#{mId} and g_id=#{gId}
+	</select>
+
+	<insert id="basketAdd" parameterType="Map">
+		insert into basket values(#{mId}, #{gId}, #{bQty}, sysdate)
+	</insert>
+		
+	<update id="basketQtyUpdate" parameterType="Map">
+		update basket set 
+		b_qty = #{bQty}
+		where m_id = #{mId} and g_id = #{gId}
+	</update>
+	
+	<delete id="basketDel">
+		delete 
+		from basket 
+		where m_id = #{mId}
+		<if test="gId != null and !''.equals(gId)">
+		and g_id = #{gId}
+		</if>
+	</delete>
+	
+	<select id="eventList" resultType="Map">
+		select e_id, e_name, e_img, e_st_dt, e_end_dt, e_comment from event where sysdate between e_st_dt and e_end_dt
+	</select>
+	
+<!--	<select id="eventItemList" resultType="Map">-->
+<!--		select eg.e_id, eg.g_id, g.g_name, eg.eg_price-->
+<!--		from event_goods eg -->
+<!--		join goods g -->
+<!--		on eg.g_id = g.g_id -->
+<!--		where e_id = #{eId}-->
+<!--	</select>-->
+	
+
+	<select id="itemList" resultType="Map">
+		select * from
+			(select g.g_cate_cd
+				 , cd.d_name
+				 , g.g_id
+				 , g.g_name
+				 , g.g_price
+				 , eg.eg_price
+				 , NVL(eg.eg_price,g.g_price) as sort_price
+				 , g.g_img
+			from goods g
+			left outer join event_goods eg on g.g_id = eg.g_id
+			left outer join code_detail cd on g.g_cate_cd = cd.d_id
+			WHERE cd.c_id = 200
+			AND g.g_cate_cd = #{cateId}
+			order by 
+	        <choose>
+				<when test="sortType == 'highPrice'">
+					sort_price desc
+				</when>
+				<when test="sortType == 'lowPrice'">
+					sort_price
+				</when>
+				<when test="sortType == 'latestReg'">
+					g.modify_dt desc
+				</when>
+			</choose>
+			)
+		where rownum <![CDATA[ <]]> 7
+	</select>
+	
+
+	<select id="cateGoodsList" resultType="java.util.Map" parameterType="map">
+	    SELECT *
+	    FROM (
+	        SELECT 
+	            g.G_id,
+	            g.G_cate_cd,
+	            g.G_name,
+	            g.G_price,
+	            g.G_qty,
+	            g.G_img,
+	            g.G_img_dtl,
+	            g.G_show_YN,
+	            g.G_del_YN,
+	            g.modify_dt,
+	            eg.eg_price,
+	            NVL(eg.eg_price, g.G_price) as sort_price,
+	            ROW_NUMBER() OVER (
+	                ORDER BY
+	                <choose>
+	                    <when test="sortType == 'highPrice'">
+	                        NVL(eg.eg_price, g.G_price) DESC
+	                    </when>
+	                    <when test="sortType == 'lowPrice'">
+	                         NVL(eg.eg_price, g.G_price) ASC
+	                    </when>
+	                    <when test="sortType == 'newest'">
+	                        g.modify_dt DESC
+	                    </when>
+	                </choose>
+	            ) AS rn
+	        FROM goods g
+	        LEFT OUTER JOIN event_goods eg ON g.G_id = eg.g_id
+	        WHERE g.G_show_YN = 'Y'
+	            AND g.G_del_YN = 'N'
+	            AND g.G_cate_cd = #{gCateCd}
+	    ) sub
+	    WHERE rn BETWEEN ((#{page}-1) * #{amount}) + 1 AND #{page} * #{amount}
+	</select>
+	
+	
+	<!-- goods 상세 -->
+	<select id="goodsDetail" parameterType="String" resultType="map">
+		select 
+	            g.G_id,
+				g.G_cate_cd,
+				g.G_name,
+				g.G_price,
+				g.G_qty,
+				g.G_img,
+				g.G_img_dtl,
+				g.G_show_YN,
+				g.G_del_YN,
+				g.modify_dt,
+				(select MIN(eg.eg_price) 
+	                   from event_goods eg
+	                  where g.g_id = eg.g_id
+	                  group by eg.g_id) as eg_price
+      from goods g
+      where g.G_id = #{gId}
+	</select>
+	
+	<select id="countCateGoods" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM goods
+    	WHERE 1=1
+		      AND G_SHOW_YN = 'Y'
+		      AND G_del_YN = 'N'
+		      AND G_CATE_CD = #{gCateCd}
+	</select>
+	
+
+	<update id="basketQtyPlus" parameterType="map">
+		UPDATE BASKET
+			SET B_QTY = B_QTY + #{bQty}
+		where 1=1
+		 	  and M_ID = #{mId} 
+		 	  and G_ID = #{gId}
+	</update>
+
+	<select id="checkQty" parameterType="Map" resultType="int">
+		select g_qty from goods where g_id = #{gId}	
+	</select>
+
+	
+	
+</mapper>

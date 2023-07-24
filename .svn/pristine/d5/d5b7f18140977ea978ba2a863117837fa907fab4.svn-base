@@ -1,0 +1,5 @@
+package com.eansoft.mall.admin.service;
+
+public interface  AdminService {
+
+}

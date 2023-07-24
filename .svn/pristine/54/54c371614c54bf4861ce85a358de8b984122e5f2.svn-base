@@ -1,0 +1,108 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>로그인</title>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+#login_container{
+	margin-top:15%;
+	text-align:center;
+	width: 100%;
+	height:300px;
+}
+
+#mId, #mPass{
+	margin : 10px;
+	width : 320px;
+	height : 35px;
+	background-color : white;
+	border-radius : 5px;
+	border: solid 1.5px rgb(68, 114, 196);
+	text-align: center;
+	font-size: 12px;
+	&:hover {
+	   font-weight: 600;  
+	} 
+	&:focus {
+	    font-weight: 600;
+	     color: black;
+	     border: solid 1.5px rgb(68, 114, 196);
+	     opacity: 0.8;    
+	}
+}
+
+#loginButton, #joinButton, #exitBtn {
+	margin : 10px;
+    width : 330px;
+    height: 40px;
+    color : white;
+    opacity: 0.5;
+    background-color: rgb(68, 114, 196);
+    border-radius: 5px;
+    border: none;
+    &:hover {
+        border: none;
+        opacity: 0.8;      
+    }  
+}
+</style>
+</head>
+<body>
+<div id="login_container">
+<input type="text" id="mId" placeholder="아이디를 입력하세요"/>
+<div><input type="password" id="mPass" placeholder="비밀번호를 입력하세요"/></div>
+<div><button id="loginButton" onclick="javascript:login();">로그인</button></div>
+<div><button id="joinButton" onclick="javascript:join();">회원가입</button></div>
+<div><button id="exitBtn" onclick="window.location.href='/'">취소</button></div>
+</div>
+</body>
+
+<script type="text/javascript">
+
+
+function login() {
+	
+	$.ajax({
+		method: "POST",
+	    url: "/auth/login",
+	    data: { 
+	    	mId : $("#mId").val(),
+	    	mPass : $("#mPass").val()
+	    },
+	    success: function(data) {
+	    	if(data.result == "SUCCESS") {
+	    		window.location.href='/'
+	    	} else {
+	    		alert(data.message);
+	    	}
+        },
+	    error: function() {
+	          console.log('통신실패!!');
+        }
+	})
+	
+}
+
+
+$(document).ready(function() {
+    $(document).keydown(function(event) {
+        if (event.keyCode === 13) {
+            login(); 
+        }
+    });
+    
+    var joinMsg = "${joinMsg}";
+	if(joinMsg === "joinSuccess") {
+		alert("회원가입되었습니다.");
+	}
+});
+
+function join() {
+	window.location.href='/member/joinMember';
+}
+</script>
+
+</html>

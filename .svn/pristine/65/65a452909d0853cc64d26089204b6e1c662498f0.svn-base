@@ -1,0 +1,15 @@
+package com.eansoft.mall.goods.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
+public interface GoodsDao {
+	 List<Map<String, Object>> basketList(@Param("m_id") String m_id, @Param("searchType") String searchType);
+
+}

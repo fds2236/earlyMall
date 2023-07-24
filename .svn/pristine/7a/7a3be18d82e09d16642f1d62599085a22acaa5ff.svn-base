@@ -1,0 +1,111 @@
+package com.eansoft.mall.member.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.eansoft.mall.member.service.MemberService;
+import com.eansoft.mall.member.vo.MemberVo;
+
+@Controller
+@RequestMapping("/member")
+
+public class MemberController {
+	@Autowired
+	private MemberService memberService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/myPage")
+	public String myPage(String mId, HttpServletRequest request) {
+		
+		// 내정보 조회 - 기본은 세션에 있음
+		logger.info("mid data = {}",mId);
+		HttpSession session = request.getSession();
+		MemberVo memberInfo = (MemberVo) session.getAttribute("memberInfo");
+		
+		logger.info("memberInfo data = {}",memberInfo);
+		
+		return "member/myPage";
+	}
+
+	// 아이디 중복체크
+	@PostMapping("/idCheck")
+	@ResponseBody
+	public String idCheck(MemberVo memberVo) {
+		String returnStr = "";
+		
+		int idCnt = memberService.idCheck(memberVo.getmId());
+		
+		if(idCnt > 0) {
+			returnStr = "duplicatedId";
+		} else {
+			returnStr = "availableId";
+		}
+		
+		return returnStr;
+		
+	}
+	
+	// 관리자페이지에서 회원등록
+	@PostMapping("/joinFromAdmin")
+	@ResponseBody
+	public Map<String, String> joinFromAdmin(MemberVo memberVo, Model model) {
+		Map<String, String> returnMap = new HashMap<String, String>();
+		int joinResult = memberService.joinFromAdmin(memberVo);
+		logger.info("joinResult: {}", joinResult);
+		
+		// loginUser로 return 다르게 나눠야함
+		
+		if(joinResult == 0) {
+			returnMap.put("joinMsg", "joinFail");
+			return returnMap;
+		}
+		
+		returnMap.put("joinMsg", "joinSuccess");
+		return returnMap;
+	}
+	
+	// 회원가입화면 접속
+	@GetMapping("/joinMember")
+	public String joinMemberView() {
+		return "/member/joinMember";
+	}
+	
+	@PostMapping("/joinMember")
+	public String joinMember(MemberVo memberVo, Model model) {
+		int joinResult = memberService.joinFromAdmin(memberVo);
+		logger.info("회원가입 컨트롤러---------");
+		
+		if(joinResult == 0) {
+			model.addAttribute("joinMsg", "joinFail");
+			return "/member/joinMember";
+		}
+		
+		model.addAttribute("joinMsg", "joinSuccess");
+		return "/login";
+	}
+	
+	// 회원수정 팝업 ajax
+	@GetMapping("/getMemberInfo")
+	@ResponseBody
+	public MemberVo getMemberInfo(@RequestParam("mId") String mId) {
+		MemberVo member = memberService.getMemberInfo(mId);
+		logger.info("컨트롤러 member----------, {}", member);
+		return member;
+	}
+}

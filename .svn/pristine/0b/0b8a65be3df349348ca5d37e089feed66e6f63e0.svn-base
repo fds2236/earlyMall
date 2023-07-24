@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.member.dao.MemberDao">
+
+	<select id="login" parameterType="com.eansoft.mall.member.vo.MemberVo" resultType="com.eansoft.mall.member.vo.MemberVo">
+		SELECT M_ID
+			 , M_PASS
+			 , M_NAME
+			 , M_MOBILE
+			 , M_ADD_DEFAULT
+			 , M_ADD_DETAIL
+			 , M_TYPE
+			 , MODIFY_DT
+		  FROM MEMBER
+		 WHERE M_ID = #{mId}
+		   AND M_PASS = #{mPass}
+		   AND M_DEL_YN = 'N'
+	</select>
+	
+	<select id="idCheck" parameterType="String" resultType="int">
+		SELECT COUNT(M_ID)
+		FROM MEMBER
+		WHERE M_ID = #{mId}
+	</select>
+	
+	<insert id="joinFromAdmin" parameterType="com.eansoft.mall.member.vo.MemberVo">
+		INSERT INTO MEMBER(
+		M_ID,
+		M_PASS,
+		M_NAME,
+		M_TYPE,
+		REG_DT
+		)
+		VALUES (
+		#{mId},
+		#{mPass},
+		#{mName},
+		'01',
+		SYSDATE
+		)
+	</insert>
+	
+	<select id="getMemberInfo" parameterType="String" resultType="com.eansoft.mall.member.vo.MemberVo">
+		SELECT M_ID,
+			M_PASS,
+			M_NAME,
+			M_MOBILE,
+			M_ADD_DEFAULT,
+			M_ADD_DETAIL,
+			M_DEL_YN,
+			MODIFY_DT
+		FROM MEMBER
+		WHERE M_ID = #{mId}
+	</select>
+<!-- 
+    <select id="selectAI" resultType="AiPolicyVo" parameterType="String">
+		SELECT tcs.pk_company_staff AS userId
+			, tapv.pk_ai_policy_voice
+			, tapv.disp_order
+			, tapv.disp_name 
+			, tapv.labs_name 
+			, tapv.labs_tone 
+			, tapv.use_yn 
+			, tapv.memo 
+			, tapv.fk_writer 
+			, tapv.fd_regdate 
+			, tapv.fk_modifier 
+			, tapv.fd_moddate 
+		FROM tbl_company_staff tcs, tbl_ai_policy_voice tapv 
+		WHERE tcs.fd_staff_persona = tapv.pk_ai_policy_voice
+		AND tcs.pk_company_staff = #{userId}
+    </select>
+    
+    <select id="checkMyState" resultType="java.util.Map" parameterType="String">
+		SELECT fd_staff_response_status_code AS statusValue
+		FROM tbl_company_staff
+		WHERE pk_company_staff =  #{userId}
+    </select>
+    
+    <update id="settingMyState" parameterType="java.util.Map">
+		UPDATE tbl_company_staff
+		SET fd_staff_response_status_code = #{statusValue}
+			, fk_modifier = #{userId}
+			, fd_moddate = SYSDATE()  
+		WHERE pk_company_staff = #{userId}
+	</update>
+    
+    <select id="AIResponseList" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT tcc.fd_customer_name AS name
+			, tcc.fd_customer_mobile AS phoneNumber
+			, tcc.contact_ai_yn
+		FROM tbl_company_customer tcc 
+			, tbl_company tc 
+			, tbl_company_staff tcs 
+		WHERE tcc.fk_company = tc.pk_company
+		AND tc.pk_company = tcs.fk_company
+		AND tcs.pk_company_staff = #{userId}
+		<if test="searchKeyword != null and !''.equals(searchKeyword)">
+		AND tcc.fd_customer_name LIKE CONCAT('%',#{searchKeyword},'%') OR tcc.fd_customer_phone LIKE CONCAT('%',#{searchKeyword},'%')
+		</if>
+    </select>
+    
+    <update id="AIResponseSetting" parameterType="java.util.Map">
+		UPDATE tbl_company_customer
+		SET fk_modifier = #{userId}
+			, fd_moddate = SYSDATE()
+			, contact_ai_yn = #{setYn}
+		WHERE fk_company = (SELECT fk_company FROM tbl_company_staff WHERE pk_company_staff = #{userId})
+		AND fd_customer_name = #{customerName}
+	</update>
+	
+	<insert id="regWorkTime" parameterType="java.util.Map">
+		INSERT INTO tbl_ai_conf_day_on (
+			fk_company
+			, fk_company_staff_ai
+			, week_num
+			, time_from_hh
+			, time_from_min
+			, time_to_hh
+			, time_to_min
+			, work_type
+			, time_type
+			, enable_yn
+			, use_yn
+			, fk_writer
+			, fd_regdate
+		) value (
+			(SELECT fk_company FROM tbl_company_staff WHERE pk_company_staff = #{userId})
+			, #{userId}
+			, #{dayOfWeek}
+			, #{workStartHH}
+			, #{workStartMM}
+			, #{wokrEndHH}
+			, #{wokrEndMM}
+			, 'W'
+			, 'WORK_ON'
+			, #{automaticAbsenceStatus}
+			, 'Y'
+			, #{userId}
+			, SYSDATE() 
+		)
+	</insert>
+	
+	<select id="workTimeSearch" resultType="java.util.Map" parameterType="String">
+		SELECT LPAD(time_from_hh,2,'0') AS workStartHH
+			, LPAD(time_from_min,2,'0') AS workStartMM
+			, LPAD(time_to_hh,2,'0') AS wokrEndHH
+			, LPAD(time_to_min,2,'0') AS wokrEndMM
+			, week_num AS dayOfWeek
+			, enable_yn AS automaticAbsenceStatus 
+		FROM tbl_ai_conf_day_on 	
+		WHERE use_yn = 'Y'
+		AND fk_company_staff_ai = #{userId}
+		AND work_type = 'W'
+	</select>
+	
+	<update id="workTimeSetting" parameterType="String">
+		UPDATE tbl_ai_conf_day_on
+		SET time_from_hh = #{workStartHH}
+			, time_from_min = #{workStartMM}
+			, time_to_hh = #{wokrEndHH}
+			, time_to_min = #{wokrEndMM}
+			, use_yn = #{useYn}
+			, enable_yn = #{automaticAbsenceStatus}
+		WHERE fk_company_staff_ai = #{userId}
+		AND week_num = #{dayOfWeek}
+	</update>
+	
+	<select id="responseProfileSearch" resultType="java.util.Map" parameterType="String">
+		SELECT tcs.staff_nick_name AS designation
+			, tcs.fd_staff_name AS name
+			, tc.fd_company_name AS companyName
+			, tacw.open_company_yn AS companyNamePublicStatus
+			, tcs.fd_staff_duty AS position
+			, tacw.open_company_level_yn AS positionPublicStatus
+			, tcs.fd_staff_mobile AS mobilePhoneNumber
+			, tcs.fd_staff_email AS email
+			, tacw.open_email_yn AS emailPublicStatus
+			, tcs.fd_staff_birth AS dateOfBirth
+			, tacw.open_birth_yn AS dateOfBirthPublicStatus
+			, CONCAT(tc.fd_address_common,' ',tc.fd_address_detail) AS workplaceAddress
+			, tacw.open_company_addr_yn AS workplaceAddressPublicStatus
+		FROM tbl_company_staff tcs
+			, tbl_company tc 
+			, tbl_ai_conf_work tacw 
+		WHERE tcs.pk_company_staff = #{userId}
+		AND tcs.fk_company = tc.pk_company
+		AND tacw.fk_company_staff_ai = tcs.pk_company_staff
+	</select>
+	
+	<update id="responseProfileSetting" parameterType="java.util.Map">
+		UPDATE tbl_company_staff
+		SET fk_modifier = #{userId}
+			, fd_moddate = SYSDATE()
+			<if test="designation != null and !''.equals(designation)">
+			, staff_nick_name = #{designation}
+			</if>
+			<if test="name != null and !''.equals(name)">
+			, fd_staff_name = #{name}
+			</if>
+			<if test="position != null and !''.equals(position)">
+			, fd_staff_duty = #{position}
+			</if>
+			<if test="mobilePhoneNumber != null and !''.equals(mobilePhoneNumber)">
+			, fd_staff_mobile = #{mobilePhoneNumber}
+			</if>
+			<if test="email != null and !''.equals(email)">
+			, fd_staff_email = #{email}
+			</if>
+			<if test="dateOfBirth != null and !''.equals(dateOfBirth)">
+			, fd_staff_birth = #{dateOfBirth}
+			</if>
+			<if test="aiSeq != null and !''.equals(aiSeq)">
+			, fd_staff_persona = #{aiSeq}
+			</if>
+		WHERE pk_company_staff = #{userId}
+	</update>
+	
+	<update id="responseCompanySetting" parameterType="java.util.Map">
+		UPDATE tbl_company
+		SET fk_modifier = #{userId}
+			, fd_moddate = SYSDATE() 
+			<if test="companyName != null and !''.equals(companyName)">
+			, fd_company_name = #{companyName}
+			</if>
+			<if test="workplaceAddressCommon != null and !''.equals(workplaceAddressCommon)">
+			, fd_address_common = #{workplaceAddressCommon}
+			</if>
+			<if test="workplaceAddressDetail != null and !''.equals(workplaceAddressDetail)">
+			, fd_address_detail = #{workplaceAddressDetail}
+			</if>
+			<if test="companyPhone != null and !''.equals(companyPhone)">
+			, fd_company_phone = #{companyPhone}
+			</if>
+		WHERE pk_company = (SELECT fk_company FROM tbl_company_staff WHERE pk_company_staff = #{userId})
+	</update>
+	
+	<update id="responseAiSetting" parameterType="java.util.Map">
+		UPDATE tbl_ai_conf_work
+		SET fk_modifier = #{userId}
+			, fd_moddate = SYSDATE()
+			<if test="companyNamePublicStatus != null and !''.equals(companyNamePublicStatus)">
+			, open_company_yn = #{companyNamePublicStatus}
+			</if>
+			<if test="positionPublicStatus != null and !''.equals(positionPublicStatus)">
+			, open_company_level_yn = #{positionPublicStatus}
+			</if>
+			<if test="emailPublicStatus != null and !''.equals(emailPublicStatus)">
+			, open_email_yn = #{emailPublicStatus}
+			</if>
+			<if test="dateOfBirthPublicStatus != null and !''.equals(dateOfBirthPublicStatus)">
+			, open_birth_yn = #{dateOfBirthPublicStatus}
+			</if>
+			<if test="workplaceAddressPublicStatus != null and !''.equals(workplaceAddressPublicStatus)">
+			, open_company_addr_yn = #{workplaceAddressPublicStatus}
+			</if>
+		WHERE fk_company_staff_ai = #{userId}
+	</update>
+	
+	<insert id="regCustomerInfo" parameterType="java.util.Map">
+		INSERT INTO tbl_company_customer (
+			fk_company
+			, fd_customer_name
+			, fd_active_state
+			<if test="companyName != null and !''.equals(companyName)">
+			, fd_company_name
+			</if>
+			<if test="companyDept != null and !''.equals(companyDept)">
+			, fd_company_dept
+			</if>
+			<if test="companyPosition != null and !''.equals(companyPosition)">
+			, fd_company_position
+			</if>
+			<if test="customerMobile != null and !''.equals(customerMobile)">
+			, fd_customer_mobile
+			</if>
+			<if test="customerPhone != null and !''.equals(customerPhone)">
+			, fd_customer_phone
+			</if>
+			<if test="customerEmail != null and !''.equals(customerEmail)">
+			, fd_customer_email
+			</if>
+			<if test="customerKakaoUid != null and !''.equals(customerKakaoUid)">
+			, fd_customer_kakao_uid
+			</if>
+			<if test="customerChatUid != null and !''.equals(customerChatUid)">
+			, fd_customer_chat_uid
+			</if>
+			, contact_channel_from	
+			, contact_date_from
+			<if test="additionalInformation != null and !''.equals(additionalInformation)">
+			, fd_additional_information
+			</if>
+			<if test="customerAddressCommon != null and !''.equals(customerAddressCommon)">
+			, fd_customer_address_common
+			</if>
+			<if test="customerAddressDetail != null and !''.equals(customerAddressDetail)">
+			, fd_customer_address_detail
+			</if>
+			<if test="companyAddressCommon != null and !''.equals(companyAddressCommon)">
+			, fd_company_address_common
+			</if>
+			<if test="companyAddressDetail != null and !''.equals(companyAddressDetail)">
+			, fd_company_address_detail
+			</if>
+			, fk_writer
+			, fd_regdate
+			, contact_ai_yn
+		) value (
+			(SELECT fk_company FROM tbl_company_staff WHERE pk_company_staff = #{userId})
+			, #{customerName}
+			, 'A2201'
+			<if test="companyName != null and !''.equals(companyName)">
+			, #{companyName}
+			</if>
+			<if test="companyDept != null and !''.equals(companyDept)">
+			, #{companyDept}
+			</if>
+			<if test="companyPosition != null and !''.equals(companyPosition)">
+			, #{companyPosition}
+			</if>
+			<if test="customerMobile != null and !''.equals(customerMobile)">
+			, #{customerMobile}
+			</if>
+			<if test="customerPhone != null and !''.equals(customerPhone)">
+			, #{customerPhone}
+			</if>
+			<if test="customerEmail != null and !''.equals(customerEmail)">
+			, #{customerEmail}
+			</if>
+			<if test="customerKakaoUid != null and !''.equals(customerKakaoUid)">
+			, #{customerKakaoUid}
+			</if>
+			<if test="customerChatUid != null and !''.equals(customerChatUid)">
+			, #{customerChatUid}
+			</if>
+			<choose>
+				<when test="contactChannelFrom != null and !''.equals(contactChannelFrom)">
+			, #{contactChannelFrom}
+				</when>
+				<otherwise>
+			, 'A2201'
+				</otherwise>	
+			</choose>
+			, SYSDATE()
+			<if test="additionalInformation != null and !''.equals(additionalInformation)">
+			, #{additionalInformation}
+			</if>
+			<if test="customerAddressCommon != null and !''.equals(customerAddressCommon)">
+			, #{customerAddressCommon}
+			</if>
+			<if test="customerAddressDetail != null and !''.equals(customerAddressDetail)">
+			, #{customerAddressDetail}
+			</if>
+			<if test="companyAddressCommon != null and !''.equals(companyAddressCommon)">
+			, #{companyAddressCommon}
+			</if>
+			<if test="companyAddressDetail != null and !''.equals(companyAddressDetail)">
+			, #{companyAddressDetail}
+			</if>
+			, #{userId}
+			, SYSDATE()
+			<choose>
+				<when test="setYn != null and !''.equals(setYn)">
+			, #{setYn}
+				</when>
+				<otherwise>
+			, 'Y'
+				</otherwise>	
+			</choose>
+		)
+	</insert>
+	
+	<update id="updateCustomerInfo" parameterType="java.util.Map">
+		UPDATE tbl_company_customer
+		SET fk_modifier = #{userId}
+			, fd_moddate = SYSDATE()
+			<if test="companyName != null and !''.equals(companyName)">
+			, fd_company_name = #{companyName}
+			</if>
+			<if test="companyDept != null and !''.equals(companyDept)">
+			, fd_company_dept = #{companyDept}
+			</if>
+			<if test="companyPosition != null and !''.equals(companyPosition)">
+			, fd_company_position = #{companyPosition}
+			</if>
+			<if test="customerMobile != null and !''.equals(customerMobile)">
+			, fd_customer_mobile = #{customerMobile}
+			</if>
+			<if test="customerPhone != null and !''.equals(customerPhone)">
+			, fd_customer_phone = #{customerPhone}
+			</if>
+			<if test="customerEmail != null and !''.equals(customerEmail)">
+			, fd_customer_email = #{customerEmail}
+			</if>
+			<if test="customerKakaoUid != null and !''.equals(customerKakaoUid)">
+			, fd_customer_kakao_uid = #{customerKakaoUid}
+			</if>
+			<if test="customerChatUid != null and !''.equals(customerChatUid)">
+			, fd_customer_chat_uid = #{customerChatUid}
+			</if>
+			<if test="contactChannelFrom != null and !''.equals(contactChannelFrom)">
+			, contact_channel_from = #{contactChannelFrom}
+			</if>
+			, contact_date_from = SYSDATE()
+			<if test="additionalInformation != null and !''.equals(additionalInformation)">
+			, fd_additional_information = {additionalInformation}
+			</if>
+			<if test="customerAddressCommon != null and !''.equals(customerAddressCommon)">
+			, fd_customer_address_common = {customerAddressCommon}
+			</if>
+			<if test="customerAddressDetail != null and !''.equals(customerAddressDetail)">
+			, fd_customer_address_detail = {customerAddressDetail}
+			</if>
+			<if test="companyAddressCommon != null and !''.equals(companyAddressCommon)">
+			, fd_company_address_common = {companyAddressCommon}
+			</if>
+			<if test="companyAddressDetail != null and !''.equals(companyAddressDetail)">
+			, fd_company_address_detail = {companyAddressDetail}
+			</if>
+			<if test="setYn != null and !''.equals(setYn)">
+			, contact_ai_yn = #{setYn}
+			</if>
+		WHERE fk_company = (SELECT fk_company FROM tbl_company_staff WHERE pk_company_staff = #{userId})
+		AND fd_customer_name = #{customerName}
+	</update>
+	
+	<delete id="deleteCustomerInfo" parameterType="java.util.Map">
+		DELETE FROM tbl_company_customer
+		WHERE fk_company = (SELECT fk_company FROM tbl_company_staff WHERE pk_company_staff = #{userId})
+		AND fd_customer_name = #{customerName}
+	</delete>
+	
+	<select id="forwardstate" parameterType="String" resultType="java.util.Map">
+		SELECT enable_yn AS statusValue
+		FROM tbl_ai_conf_work
+		WHERE fk_company_staff_ai = #{userId}
+		AND p_ai_work_cd IS NULL
+	</select>
+	
+	<update id="settingForward" parameterType="java.util.Map">
+		UPDATE tbl_ai_conf_work
+		SET enable_yn = #{statusValue}
+			, fk_modifier = #{userId}
+			, fd_moddate = SYSDATE()
+		WHERE fk_company_staff_ai = #{userId}
+	</update>
+-->
+</mapper>

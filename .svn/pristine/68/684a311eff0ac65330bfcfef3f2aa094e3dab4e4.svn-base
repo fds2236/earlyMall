@@ -1,0 +1,173 @@
+package com.eansoft.mall.admin.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.eansoft.mall.admin.service.AdminService;
+import com.eansoft.mall.member.vo.MemberVo;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {	
+	@Autowired
+	private AdminService adminService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@GetMapping("/dash")
+	public String dashBoard(HttpServletRequest request,
+							Model model) {
+		
+		// 내정보 조회 - 기본은 세션에 있음
+		HttpSession session = request.getSession();
+		MemberVo memberInfo = (MemberVo) session.getAttribute("memberInfo");
+		
+		String page = "";
+		
+		if(memberInfo == null || !"00".equals(memberInfo.getmType())) {
+			page = "main";
+		} else {
+			page = "admin/adminDash";
+		}
+		
+		//최근 한달 회원가입 건수
+		model.addAttribute("memMonth", adminService.getMonthMember());
+		//오늘 회원가입 건수
+		model.addAttribute("memToday", adminService.getTodayMember());
+		//최근 한달 총 주문 건수
+		model.addAttribute("orderMonth", adminService.getMonthOrder());
+		//오늘 총 주문 건수
+		model.addAttribute("orderToday", adminService.getTodayOrder());
+		//최근 한달 이벤트 등록 건수
+		model.addAttribute("eventMonth", adminService.getMonthEvent());
+		//오늘 이벤트 등록 건수
+		model.addAttribute("eventToday", adminService.getTodayEvent());
+		
+		return page;
+	}
+
+	
+	// 상품관리 -tr
+	@GetMapping("/goodsManage")
+	public String goodsManagement() {
+				
+		return "admin/adminGoodsManage";
+	}
+	
+	//상품관리 -tr
+	@GetMapping("/goodsMg")
+	@ResponseBody
+	public Map<String, Object> goodsMg(
+			@RequestParam(value="gCateCd") String gCateCd,
+            @RequestParam(value="searchKeyword") String searchKeyword,
+            @RequestParam(value="gShowYn") String gShowYn,           
+            @RequestParam(value="gDelYn") String gDelYn){		
+			
+		Map<String, Object> map = new HashMap<String, Object>();
+	       map.put("gCateCd", gCateCd);
+	       map.put("searchKeyword", searchKeyword);
+	       map.put("gShowYn", gShowYn);
+	       map.put("gDelYn", gDelYn);	      
+		
+	       logger.info("gCateCd", gCateCd);
+		return adminService.getSearchGoodsList(map);		
+	}
+	
+	
+	
+	// 관리자 주문관리
+	@GetMapping("/orderManage") 
+	public String orderManage() {
+		
+		return "admin/adminOrderManage";
+	}
+	
+	// 관리자 주문관리
+	@GetMapping("/orderMg")
+	@ResponseBody
+	public Map<String, Object> orderMg(@RequestParam(value="mName", required = false)String mName,
+										@RequestParam(value="gName", required = false)String gName,
+										@RequestParam(value="oDt", required = false)String oDt,
+										@RequestParam(value="oStep", required = false)String oStep){		
+		 Map<String, Object> map = new HashMap<String, Object>();	
+		 	map.put("mName", mName);
+		 	map.put("gName", gName);
+		 	map.put("oDt", oDt);
+		 	map.put("oStep", oStep);
+		 logger.info("mName : " + mName);
+		 logger.info("gName : " + gName);
+		 logger.info("oDt : " + oDt);
+		 logger.info("oStep : " + oStep);
+		 return adminService.getOrderList(map);		
+	}
+	
+	// 주문단계 업데이트
+//	@PostMapping("updateOstep")
+//	@ResponseBody
+//	public void updateOstep(@RequestParam("oId")String oId,
+//							@RequestParam("oStep")String oStep) {
+//		
+//	}
+
+
+	// 회원관리
+	@GetMapping("/memberList")
+	public String memberList(HttpServletRequest request) {
+		
+		// 내정보 조회 - 기본은 세션에 있음
+		HttpSession session = request.getSession();
+		MemberVo memberInfo = (MemberVo) session.getAttribute("memberInfo");
+		
+		String page = "";
+		
+		if(memberInfo == null || !"00".equals(memberInfo.getmType())) {
+			page = "main";
+		} else {
+			page = "admin/memberList";
+		}
+		
+		return page;
+	}
+	 
+	
+	@RequestMapping("/getMemberList")
+	public ResponseEntity<Map<String, Object>> getMemberList(@RequestParam(value="searchName", required=false) String searchName,
+			@RequestParam(value="searchMobile", required=false) String searchMobile, @RequestParam(value="searchType", required=false) String searchType) {
+		Map<String, Object> memberList = adminService.getMemberList(searchName, searchMobile, searchType);
+		System.out.println("searchName: " + searchName + ", searchMobile: " + searchMobile + ", searchType: " + searchType);
+		System.out.println("컨트롤러 list: " + memberList);
+		
+		return new ResponseEntity<>(memberList, HttpStatus.OK);
+	}
+	
+	
+	// 이벤트관리
+	@GetMapping("/eventManage") 
+	public String eventManage() {
+		
+		return "admin/adminEventManage";
+	}
+	
+	
+	
+	
+	
+	
+	
+}

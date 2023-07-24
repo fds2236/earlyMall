@@ -1,0 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>로그인</title>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+
+<p>아이디 : </p><input type="text" id="mId"/>
+<p>비밀번호 : </p><input type="password" id="mPass"/>
+<button onclick="javascript:login();">로그인</button>
+</body>
+
+<script type="text/javascript">
+
+
+function login() {
+	
+	$.ajax({
+		method: "POST",
+	    url: "/auth/login",
+	    data: { 
+	    	mId : $("#mId").val(),
+	    	mPass : $("#mPass").val()
+	    },
+	    success: function(data) {
+	    	if(data.result == "SUCCESS") {
+	    		window.location.href='/'
+	    	} else {
+	    		alert(data.message);
+	    	}
+        },
+	    error: function() {
+	          console.log('통신실패!!');
+        }
+	})
+	
+}
+
+
+</script>
+
+</html>

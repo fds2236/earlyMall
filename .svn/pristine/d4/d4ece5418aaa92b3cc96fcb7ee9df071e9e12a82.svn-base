@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eansoft.mall.admin.dao.AdminDao">
+	
+	<!-- 최근 한달 회원가입 건수 -->
+	<select id="getMonthMember" resultType="int">
+		SELECT COUNT(REG_DT)
+		  FROM MEMBER
+		 WHERE TRUNC(REG_DT) >= TRUNC(SYSDATE) - 30
+	</select>
+
+	<!-- 오늘 회원가입 건수 -->
+	<select id="getTodayMember" resultType="int">		
+		SELECT COUNT(REG_DT)
+		  FROM MEMBER
+		 WHERE TRUNC(REG_DT) = TRUNC(SYSDATE)
+	</select>
+	
+	<!-- 최근 한달 총 주문 건수 -->
+	<select id="getMonthOrder" resultType="int">
+		SELECT COUNT(O_DT)
+		  FROM ORDERS
+		 WHERE TRUNC(O_DT) >= TRUNC(SYSDATE) - 30
+	</select>
+	
+	<!-- 오늘 총 주문 건수 -->	
+	
+	<!-- 최근 한달 등록된 이벤트 건수 -->
+	<select id="getMonthEvent" resultType="int">
+		SELECT COUNT(E_REG_DT)
+		  FROM EVENT
+		 WHERE TRUNC(E_REG_DT) >= TRUNC(SYSDATE) - 30
+	</select>
+	
+	<!-- 오늘 등록된 이벤트 건수 -->
+	
+
+<!-- 상품관리 totalcount -->
+<select id="GoodsTotalCount" resultType="int">
+	select count(*) from goods 
+</select>
+
+
+<!-- 상품관리 목록-->
+<select id="GoodsList" parameterType="hashMap" resultType="map">
+	SELECT *
+FROM (
+   SELECT rn,
+          G_id,
+          G_cate_cd,
+          G_name,
+          G_price,
+          G_qty,
+          G_img,
+          G_img_dtl,
+          G_show_YN,
+          G_DEL_YN,
+          modify_dt
+   FROM (
+      SELECT rownum AS rn,
+          G_id,
+          G_cate_cd,
+          G_name,
+          G_price,
+          G_qty,
+          G_img,
+          G_img_dtl,
+          G_show_YN,
+          G_DEL_YN,
+          modify_dt             
+      FROM goods
+      WHERE 1=1         
+<!--        <if test="sortName != null and !''.equals(sortName)"> -->
+<!--           AND sort_name = #{sortName} -->
+<!--        </if>  -->
+        AND rownum <![CDATA[ <= ]]>  #{pageNum} * #{pageSize}
+   )
+   WHERE rn >  (#{pageNum} - 1) * #{pageSize}
+) result
+</select>
+
+</mapper>

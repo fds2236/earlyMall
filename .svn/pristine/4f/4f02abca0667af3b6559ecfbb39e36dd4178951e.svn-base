@@ -1,0 +1,54 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>주문창</title>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<h1>주문하는 페이지</h1>
+<div class="main">
+	<p>mId:${orderInfo.mId}</p>
+	<p>gId:${orderInfo.gId}</p>
+	<p>bQty:${orderInfo.bQty} [이건 고민]</p>
+	<button>주문하기</button>
+</div>
+
+<script>
+var mId = "${orderInfo.mId}";
+var gId = "${orderInfo.gId}";
+var bQty = "${orderInfo.bQty}";
+
+$(document).ready(function(){
+	// 페이지 로드될 때 일단 가지고온 gId로 비동기 통신
+	// g_img, g_price, g_name, eg_price, g_qty 쓸 예정
+		console.log("gId : " + gId);
+// 	$.ajax({
+// 		url: "/goods/detail", // 이거 재사용해서 쓸 수 있을 듯 => 안됨 이거 페이지 넘어감ㅠㅠ
+// 		type : "GET",
+// 		data : {
+// 			gId : gId
+// 		},
+// 		success: function(data){
+// 			console.log(data);
+// 		}
+// 	})
+})
+
+
+$(document).on('click', 'button', function() {
+	console.log("클릭클릭클릭");
+	// oId자동생성, oDt는 sysdate, o_comp이거는 null, o_del_yn은 e디폴트 N
+	// 결국 보내야하는 것은 mId, gId, bQty, 주문가격, 주문단계(주문단계도 그냥 db에서 날려도 됨)
+	// 주문단계 1단계 코드는 10
+	// 주문 가격은 수량 * g_price(혹은 이벤트 가격있으면 eg_price)
+})
+
+// 주문 완료하는 순간 
+// goods테이블에서 주문한 qty만큼 해당 수량 갯수 빼서 업데이트 해야함
+// basket테이블에서 해당 gId 장바구니 데이터 삭제해야함
+</script>
+</body>
+</html>

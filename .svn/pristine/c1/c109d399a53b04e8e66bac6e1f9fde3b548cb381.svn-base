@@ -1,0 +1,198 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>관리자 상품관리</title>
+</head>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+<!-- jqGrid CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+<!-- The actual JQuery code -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<!-- The JQuery UI code -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+<!-- The jqGrid language file code-->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js"></script>
+<!-- The atual jqGrid code -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js"></script>
+
+
+<body>
+
+<h1>admin 관리자 상품관리</h1>
+
+<form id="searchForm">
+카테고리
+<select name="gCateCd" id="goodsGategory">
+    <option value="">전체</option>
+    <option value="10">가전</option>
+    <option value="20">컴퓨터</option>
+    <option value="30">모바일</option>  
+</select>
+
+상품명 <input id="goodsName" type="search" name="searchKeyword">
+
+노출여부
+<select name="gShowYn" id="goodsShowYn">
+    <option value="">전체</option>
+    <option value="Y">Y</option>
+    <option value="N">N</option>  
+</select>
+
+삭제여부
+<select name="gDelYn" id="goodsDelYn">
+    <option value="">전체</option>
+    <option value="Y">Y</option>
+    <option value="N">N</option>  
+</select>
+
+<button type="submit">조회</button>
+</form>
+
+<div class="tableWrap">
+    <table id="mainGrid"></table>
+    <div id="pager"></div>    
+</div>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+   	
+  var searchResultColNames =  ['아이디', '카테고리', '상품명', '가격','수량', '대표이미지','상세이미지','노출여부','삭제여부','수정일시'];
+  var searchResultColModel =  [
+    { name: 'G_ID', index: 'G_ID', align: 'center', sorttype: 'number'},
+    {  name: 'G_CATE_CD', 
+        index: 'G_CATE_CD', 
+        align: 'center',
+        
+        formatter: function(cellValue, options, rowObject) {
+          if (cellValue === '10') {
+            return '가전';
+          } else if (cellValue === '20') {
+            return '컴퓨터';
+          } else {
+            return '모바일';
+          }
+        }
+    },
+    { name: 'G_NAME', index: 'G_NAME', align: 'center' },
+    { name: 'G_PRICE', index: 'G_PRICE', align: 'center', sorttype: 'number' },
+    { name: 'G_QTY', index: 'G_QTY', align: 'center', sorttype: 'number' },
+    { name: 'G_IMG', index: 'G_IMG', align: 'center' },
+    { name: 'G_IMG_DTL', index: 'G_IMG_DTL', align: 'center' },
+    { name: 'G_SHOW_YN', index: 'G_SHOW_YN', align: 'center' },
+    { name: 'G_DEL_YN', index: 'G_DEL_YN', align: 'center' },
+    { 
+      name: 'MODIFY_DT', 
+      index: 'MODIFY_DT', 
+      align: 'center',
+      formatter: function(cellValue, options, rowObject) {
+        var date = new Date(cellValue);
+        var formattedDate = date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        return formattedDate;
+      }
+    }
+  ];
+                
+  $("#mainGrid").jqGrid({
+    url: "/admin/goodsMg",
+    datatype: "json",
+    mtype: "GET",
+    postData: {
+
+    },
+    height: 400,
+    width: 1100,
+    colNames: searchResultColNames,
+    colModel: searchResultColModel,
+    rowNum: 10,
+    rowList: [10, 20, 30],
+    pager: "#pager",
+    jsonReader: {
+      repeatitems: false,
+      root: "dataList",
+      page: function(obj) {
+        return 1;
+      },
+      total: function(obj) {
+        return obj.totalPages;
+      },
+      records: function(obj) {
+        return obj.totalRecords;
+      }
+    },
+    multiselect:true, // select박스
+    rownumbers:true, //row 숫자 붙여줌
+    loadonce: true, // 데이터를 한 번에 모두 불러옴
+    gridview: true, // 빠른 그리드 렌더링을 위해 사용
+    viewrecords: true, // 총 레코드 수 표시
+    caption: "상품 목록", // 그리드 제목
+    loadComplete: function(data) {
+      console.log("서버에서 넘어온 데이터", data.dataList);
+    }
+  });
+  
+  
+  
+  function fnSearch() {
+	  var goodsGategory = $("#goodsGategory").val();
+	  var searchKeyword = $("#goodsName").val();
+	  var goodsShowYn = $("#goodsShowYn").val();
+	  var goodsDelYn = $("#goodsDelYn").val();
+
+	  console.log("setGrid전 goodsGategory: " + goodsGategory + ", searchKeyword: " + searchKeyword + ", goodsShowYn: " + goodsShowYn + ", goodsDelYn: " + goodsDelYn);
+
+	  $.ajax({
+	    url: "/admin/goodsMg",
+	    type: "GET",
+	    dataType: "json",
+	    data: {
+	      gCateCd: goodsGategory,
+	      searchKeyword: searchKeyword,
+	      gShowYn: goodsShowYn,
+	      gDelYn: goodsDelYn
+	    },
+	    success: function(response) {
+	      console.log("goodsGategory: " + goodsGategory + ", searchKeyword: " + searchKeyword + ", goodsShowYn: " + goodsShowYn + ", goodsDelYn: " + goodsDelYn);
+	      console.log(response.dataList);
+	      // 그리드 재로드
+	      $("#mainGrid").jqGrid("clearGridData")
+	        .jqGrid("setGridParam", {
+	          datatype: "json",
+	          page: 1,
+	          postData: {
+	            gCateCd: goodsGategory,
+	            searchKeyword: searchKeyword,
+	            gShowYn: goodsShowYn,
+	            gDelYn: goodsDelYn
+	          },
+	          jsonReader: {
+	            repeatitems: false,
+	            root: "dataList",
+	            page: function(obj) {
+	              return 1;
+	            },
+	            total: function(obj) {
+	              return obj.totalPages;
+	            },
+	            records: function(obj) {
+	              return obj.totalRecords;
+	            }
+	          }
+	        })
+	        .trigger("reloadGrid", [{ page: 1 }]);
+	    },
+	    error: function(error) {
+	      console.log("Error occurred while searching:", error);
+	    }
+	  });
+	}
+});
+</script>
+
+</html>

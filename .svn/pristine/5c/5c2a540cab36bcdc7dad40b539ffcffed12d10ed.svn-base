@@ -1,0 +1,354 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>나의 정보</title>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<div><button class="testBtn" onClick="clickPop('add')">등록</button><button class="testBtn" onClick="clickPop('mod')">수정</button></div>
+<div id="mainDiv"></div>
+
+<div id="samplePopup" class="modal">
+	<div class="modal-content">
+		<div class="modalHeader">
+			<span class="add title">등록</span>
+			<span class="mod title">수정</span>
+			<span class="close closeBtn">&times;</span>
+		</div>
+		<div class="modalBody">
+			<div class="BodyCont left">
+				<div class="contDiv">
+					<div class="contName">1번</div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv">
+					<div class="contName">2번</div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv">
+					<div class="contName">3번</div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv add">
+					<div class="contName">4번</div>
+					<div class="contBtnDiv"><button class="contBtn">찾기</button></div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv add">
+					<div class="contName">5번</div>
+					<input type="text" class="contValue"/>
+				</div>
+			</div>
+			<div class="BodyCont right">
+				<div class="contDiv">
+					<div class="contName">6번</div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv">
+					<div class="contName">7번</div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv">
+					<div class="contName">8번</div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv mod">
+					<div class="contName">9번</div>
+					<input type="text" class="contValue"/>
+				</div>
+				<div class="contDiv mod">
+					<div class="contName">10번</div>
+					<input type="text" class="contValue"/>
+				</div>
+			</div>
+		</div>
+		<div class="modalBottom">
+			<button class="modalBtn close">닫기</button>
+			<button class="add modalBtn" onClick="">등록</button>
+			<button class="mod modalBtn" onClick="">수정</button>
+		</div>
+	</div>
+</div>
+
+
+</body>
+
+<style>
+.cart_item {
+	width: 1020px;
+	margin: 10px;
+	display: flex;
+	flex-direction: row;
+	border: 2px solid black;
+	height: 150px;
+}
+.cart_img {
+	width: 20%;
+	margin: 10px;
+	border: 2px solid black;
+}
+.cart_info {
+	width: 60%;
+}
+.cart_function{
+	width: 20%;
+	display: flex;
+	flex-direction: column;
+}
+.saveBtn {
+	display:none;
+}
+.thumbImg {
+	width: 100%;
+	height: 100%;
+}
+
+
+/* 모달 팝업용 */
+.modal {
+	display: none; /* 기본적으로 숨김 */
+	position: fixed; /* 고정 위치 */
+	z-index: 1; /* 다른 요소들보다 위에 표시되도록 설정 */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto; /* 스크롤 생성 */
+	background-color: rgba(0, 0, 0, 0.4); /* 배경 투명도 설정 */
+}
+.modal-content {
+	background-color: #fefefe; /* 모달 내용 배경색 */
+	margin: 7% auto; /* 모달 위치 */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 600px;
+}
+.closeBtn {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+.title {
+	font-size: 17px;
+	font-weight: bold;
+}
+.testBtn {
+	margin-left: 15px;
+}
+.modalHeader {
+	line-height: 50%;
+}
+.modalBody {
+	border-top: 1px solid #aaa;
+	height: 400px;
+    margin-top: 20px;
+}
+.modalBottom {
+	border-top: 1px solid #aaa;
+	height: 50px;
+    margin-top: 20px;
+}
+.modalBtn {
+	width: 60px;
+    margin: 14px 0 0 14px;
+    float: right;
+}
+.BodyCont {
+	width: calc(50% - 20px);
+    margin: 8px 10px;
+/*     border: 1px dotted #aaa; */
+    height: 100%;
+    float: left;
+}
+.contDiv {
+	margin-bottom: 10px;
+}
+.contName {
+	margin-bottom: 5px;
+}
+.contValue {
+	width: 80%;
+    height: 25px;
+}
+.contBtnDiv {
+	float: right;
+}
+.contBtn {
+	height: 30px;
+}
+</style>
+
+<script>
+
+var mId = "${memberInfo.mId}";
+var sign = "";
+var sortType = "latestReg"; // 최근등록순
+var currPage = 1;
+
+$(document).ready(function() {
+// 	basketList(mId);
+// 	infiniteScroll();
+});
+
+function clickPop(mode) {
+	
+	if(mode == "add") {
+		$(".add").show();
+		$(".mod").hide();
+	} else {
+		$(".mod").show();
+		$(".add").hide();
+	}
+	
+	$("#samplePopup").css("display", "block");
+
+	
+// 	$("#registerBtn").show();
+// 	$("#updateBtn").show();
+// 	$("#delBtn").show();	
+	
+	
+// 	// 모달 필드 값을 초기화
+// 	$("#myModal #gCateCd").val('');
+// 	$("#myModal #gPrice").val('');
+// 	$("#myModal #gName").val('');
+// 	$("#myModal #gQty").val('');
+// 	$("#myModal #gImgText").val('');
+// 	$("#myModal #gImgDtlText").val('');
+// 	$("#myModal #gShowYn").val('');
+// 	$("#myModal #gDelYn").val('');
+	
+// 	//수정 , 삭제 버튼 안보이게 히든하기 
+// 	$("#updateBtn").hide();
+// 	$("#delBtn").hide();	
+	
+}
+
+//모달 닫기
+function closeModal() {
+	$("#samplePopup").css("display", "none");
+}
+
+//닫기 버튼 클릭 시 모달 닫기
+$(".close").click(function() {
+	closeModal();
+});
+
+// 다른 곳을 클릭하면 모달 닫기
+$(window).click(function(event) {
+	if (event.target == $("#samplePopup")[0]) {
+		closeModal();
+	}
+});
+
+
+
+
+// 데이터 불러오기
+function basketList(mId) {
+	$.ajax({
+		url: "/goods/basketList",
+		type: "GET",
+		data: {
+			mId: mId,
+	        sortType: sortType,
+			page: currPage
+		},
+		success: function(data) {
+	    	  var dataList = data.dataList;
+	    	  
+	    	  var addHtml = "";
+	    	  for (var i = 0; i < dataList.length; i++) {
+	    		  var item = dataList[i];
+	    		  addHtml += "<div class='cart_item' id='item_" + item.G_ID + "'>"
+	    		  		   + '<div class="cart_img"><img class="thumbImg" src=\'' + item.G_IMG + '\'/></div>' 
+	    		  		   + "<div class='cart_info'>" 
+	    		  		   + "<p>상품명: " + item.G_NAME +"</p>"
+	    		  		   + "<p>가격: " + item.G_PRICE +"</p>"
+	    		  		   + "<div>"
+	    		  		   + '<button onClick="calQty(\''+ item.G_ID +'\',\'minus\')">-</button>'
+	    		  		   + "수량: " + "<span id='" + item.G_ID + "_qty' data-firstqty='" + item.B_QTY + "' data-modyn='N'>" + item.B_QTY +"</span>"
+	    		  		   + '<button onClick="calQty(\''+ item.G_ID +'\',\'plus\')">+</button>'
+	    		  		   + "</div>"
+	    		  		   + "</div>"
+	    		  		   + "<div class='cart_function'>"
+	    		  		   + "<button>주문</button>"
+	    		  		   + "<button onClick='deleteOne(" + item.G_ID + ");'>삭제</button>"
+	    		  		   + "<button onClick='deleteAll();'>전체삭제</button>"
+	    		  		   + "<button class='saveBtn' id='saveBtn_" + item.G_ID + "'>저장</button>"
+	    		  		   + "</div>"
+	    		  		   + "</div>";
+	    	  }
+	    	  $("#mainDiv").append(addHtml);
+		}
+	});
+}
+
+// 수량 변경
+function calQty(gid, cal) {
+	var qty = $("#" + gid + "_qty").html();
+	if(cal == "minus") {
+		if(Number(qty) > 1) {
+			qty = Number(qty)-1;
+		}
+	} else {
+		qty = Number(qty)+1;
+	}
+	$("#" + gid + "_qty").html(qty);
+	
+	// 변경 데이터 확인
+	var firstqty = $("#" + gid + "_qty").data("firstqty");
+	console.log("qty: " + Number(qty) + ",firstqty: " + Number(firstqty));
+	if(Number(qty) != Number(firstqty)) {
+		$("#" + gid + "_qty").data("modyn", "Y");
+		$("#saveBtn_" + gid).show();
+	} else {
+		$("#" + gid + "_qty").data("modyn", "N");
+		$("#saveBtn_" + gid).hide();
+	}
+}
+
+// 상품 하나 삭제
+function deleteOne(gid) {
+	$("#item_" + gid).hide();
+}
+
+// 상품 전체 삭제
+function deleteAll() {
+	$("div[id^='item_']").hide();
+}
+
+// 무한스크롤
+function infiniteScroll() {
+	var fullContent = document.querySelector("#mainDiv"); // 전체를 둘러싼 컨텐츠 정보획득
+	var screenHeight = screen.height; // 화면 크기
+	var oneTime = false; // 일회용 글로벌 변수
+	document.addEventListener('scroll',OnScroll,{passive:true}) // 스크롤 이벤트함수정의
+	
+	function OnScroll () { //스크롤 이벤트 함수
+		var fullHeight = fullContent.clientHeight; // infinite 클래스의 높이   
+		var scrollPosition = pageYOffset; // 스크롤 위치
+		if(fullHeight-screenHeight <= scrollPosition && !oneTime) { // 만약 전체높이-화면높이/2가 스크롤포지션보다 작아진다면, 그리고 oneTime 변수가 거짓이라면
+			currPage++;
+			oneTime = true; // oneTime 변수를 true로 변경해주고,
+			basketList(mId); // 컨텐츠를 추가하는 함수를 불러온다.
+		}
+	}
+}
+	
+
+</script>
+
+
+</html>

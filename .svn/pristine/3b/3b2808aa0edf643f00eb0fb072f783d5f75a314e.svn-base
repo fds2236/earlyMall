@@ -1,0 +1,34 @@
+package com.eansoft.mall.goods.service.impl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eansoft.mall.goods.dao.GoodsDao;
+import com.eansoft.mall.goods.service.GoodsService;
+import com.eansoft.mall.goods.service.GoodsService;
+
+import ch.qos.logback.classic.Logger;
+
+@Service
+public class GoodsServiceImpl implements GoodsService {
+	
+	@Autowired
+	private GoodsDao goodsDao;
+
+	@Override
+	public Map<String, Object> getBasketList(String m_id) {
+		List<Map<String, Object>> dataList = goodsDao.basketList(m_id);
+		System.out.println("반환할 데이터 : " + dataList); // 이것도 반환해야 함
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("dataList", dataList);
+		return resultMap;
+	}
+
+	
+	
+	
+
+}

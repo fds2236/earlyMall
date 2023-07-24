@@ -1,0 +1,181 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <style>
+    .cart_item {
+     width: 1020px;
+	 margin: 10px;
+	 display: flex;
+	 flex-direction: row;
+	 border: 2px solid black;
+	}
+	
+	.cart_img {
+	 width: 20%;
+	 margin: 10px;
+	 border: 2px solid black;
+	}
+	.cart_info {
+	 width: 60%;
+	}
+	
+	.cart_function{
+	 width: 20%;
+	 display: flex;
+  	 flex-direction: column;
+	}	
+    </style>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+	var mId = "${memberInfo.mId}";
+	var sign = "";
+	var sortType = "latestReg"; // 최근등록순
+	var currPage = 1;
+
+		$(document).ready(function() {
+		    basketList(mId);
+		});
+		
+		  function changeSortType(type) {
+			    sortType = type;
+			    basketList(mId);
+			  }
+
+		  function basketList(mId) {
+			  console.log("sortType : " + sortType);
+			  console.log("currPage : " + currPage);
+			    $.ajax({
+			      url: "/goods/basketList",
+			      type: "GET",
+			      data: {
+			        mId: mId,
+			        sortType: sortType,
+					page: currPage
+			      },
+			      success: function(data) {
+			    	  var dataList = data.dataList;
+			    	  
+			    	// 상품 정보를 담은 컨테이너 생성
+			    	  var cartContainer = $("<div>").attr("id", "cart_container");
+
+			    	  // dataList의 길이만큼 반복하여 cart_item을 생성하고 추가
+			    	  for (var i = 0; i < dataList.length; i++) {
+			    	    var item = dataList[i];
+
+			    	    // 상품 아이템 컨테이너 생성
+			    	    var cartItem = $("<div>").attr("class", "cart_item");
+
+			    	    // 상품 이미지 컨테이너 생성
+			    	    var cartImg = $("<div>").attr("class", "cart_img").text(item.G_IMG);
+
+			    		// 상품 정보 컨테이너 생성
+			    	    var cartInfo = $("<div>").attr("class", "cart_info");
+			    	    var productName = $("<p>").text("상품명: " + item.G_NAME);
+			    	    var price = $("<p>").text("가격: " + item.G_PRICE);
+			    	    var quantity = $("<p>").text("수량: " + item.B_QTY);
+
+			    	    // <p> 태그를 상품 정보 컨테이너에 추가
+			    	    cartInfo.append(productName);
+			    	    cartInfo.append(price);
+			    	    cartInfo.append(quantity);
+
+			    	    // 상품 기능 컨테이너 생성
+			    	    var cartFunction = $("<div>").attr("class", "cart_function");
+			  
+			    	    // 주문 버튼, 삭제 버튼, 전체삭제 버튼 생성
+			    	    var orderButton = $("<button>").text("주문");
+			    	    var deleteButton = $("<button>")
+			    	    	.text("삭제");
+		
+			    	    var deleteAllButton = $("<button>")
+			    	    	.text("전체삭제")
+			    	    	.click(function(){
+			    	    		basketDel(null);
+			    	    	})
+
+			    	    // 상품 이미지 컨테이너를 cartItem에 추가
+			    	    cartItem.append(cartImg);
+
+			    	    // 상품 정보 컨테이너를 cartItem에 추가
+			    	    cartItem.append(cartInfo);
+
+			    	    // 주문 버튼, 삭제 버튼, 전체삭제 버튼을 cartFunction에 추가
+			    	    cartFunction.append(orderButton);
+			    	    cartFunction.append(deleteButton);
+			    	    cartFunction.append(deleteAllButton);
+			    	    
+
+			    	    // cartFunction을 cartItem에 추가
+			    	    cartItem.append(cartFunction);
+
+			    	    // cartItem을 cartContainer에 추가
+			    	    cartContainer.append(cartItem);
+			    	  }
+			    	  
+
+			    	 // cartContainer를 페이지에 추가
+			    	  $("#cart_totalContainer").append(cartContainer);
+	 			        }
+	 			      });
+	 			    }
+			    	
+
+
+		function basketUpdate(itemId){
+			console.log("mId : " + mId);
+			console.log("itemId : " + itemId);
+			console.log("sign : " + sign);
+			$.ajax({
+				url:"/goods/basketQtyUpdate",
+				type:"POST",
+				data:{
+					mId:mId,
+	    			gId:itemId,
+	    			sign:sign
+				},
+				success: function(response) {
+	    			alert("해당 상품의 수량이 변경되었습니다.");
+	    			basketList(mId);
+	    		}
+			})
+		}
+
+		function basketDel(itemId){
+			console.log("itemId : " + itemId);
+			console.log("mId : " + mId);
+			$.ajax({
+				url:"/goods/basketDelete",
+				type:"POST",
+	    		data: {
+	    			mId:mId,
+	    			gId:itemId
+	    		},
+	    		success: function(response) {
+	    			alert("해당 상품이 장바구니에서 삭제되었습니다");
+	    			basketList(mId);
+	    		}
+			})
+		}
+		
+</script>
+
+</head>
+<body>
+    <h3>장바구니 페이지[로그인한 사람 : ${memberInfo.mId}]</h3>   
+<div id="sort">
+  <button onclick="changeSortType('lowPrice')">낮은가격순</button>
+  <button onclick="changeSortType('highPrice')">높은가격순</button>
+  <button onclick="changeSortType('latestReg')">최신순</button>
+</div>
+<br>
+
+ <div id="cart_totalContainer">
+ </div>
+
+
+</body>
+</html>

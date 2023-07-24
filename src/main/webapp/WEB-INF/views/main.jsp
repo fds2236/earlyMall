@@ -1,0 +1,286 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>얼리어답터를 위한 얼리몰</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+
+</head>
+<style>
+h1{
+	margin-left:110px;
+}
+
+.swiper {
+	border: solid 4px rgb(91, 155, 213);
+ 	width: 1024px;
+  	height: 400px;
+  	position: relative;
+}
+
+.swiper-slide{
+	text-align:center;
+}
+
+.swiper-slide img{
+	border: solid 4px rgb(91, 155, 213);
+	cursor:pointer;
+	margin-top:20px;
+	width:200px;
+	height:180px;
+}
+.swiper-button-prev, .swiper-button-next {
+    position: absolute; /* 버튼들의 위치를 설정하기 위해 절대 위치로 설정 */
+    top: 50%; /* 컨테이너의 중앙에 위치하도록 설정 */
+    transform: translateY(-50%); /* 세로 중앙 정렬 */
+    z-index: 10; /* 버튼들을 슬라이드 위에 표시하기 위해 겹침 순서를 설정 */
+    background-color: rgba(255, 255, 255, 0.5); /* 버튼 배경 색상 설정 */
+    padding: 10px; /* 버튼 패딩 설정 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  }
+ .sortBtn_container{
+ 	text-align: right;
+    width: 1024px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+ }
+ .sortBtn{
+ 	margin: 5px;
+	width: 100px;
+	height: 30px;
+	border: rgb(0, 112, 192);
+	border-radius: 5px;
+	background-color: rgb(68, 114, 196);
+	color: white;
+	cursor: pointer
+ }
+  
+.mainContent {
+	margin: 60px 10%;
+    width: 80%;
+}
+.contData {
+	margin-bottom: 40px;
+}
+.dash {
+	margin-bottom:-60px;
+}
+</style>
+<body>
+	<jsp:include page="import/mainFrame.jsp"/>
+	
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+	<div class="mainContent">
+		<div class="contData">
+			<div class="event_container">
+				<div><h1>Event</h1></div>
+				<!-- Slider main container -->
+				<div class="swiper" id="event">
+				  <div class="swiper-wrapper" id="eventSwiper"></div>
+				  <div class="swiper-pagination"></div>
+				  <div class="swiper-button-prev"></div>
+				  <div class="swiper-button-next"></div>
+				</div>
+			</div>
+		</div>
+		<div class="contData dash">
+			<div class="sortBtn_container">
+				<button class="sortBtn" value='latestReg'>최근등록순</button>
+				<button class="sortBtn" value='lowPrice'>가격낮은순</button>
+				<button class="sortBtn" value='highPrice'>가격높은순</button>
+			</div>
+		</div>
+		<div class="contData">
+			<div class="item_totalContainer"></div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+var sortType = "latestReg"; // 최근등록순
+function logout() {
+	$.ajax({
+		method: "POST",
+	    url: "/auth/logout",
+	    data: {},
+	    success: function(data) {
+	    	if(data.result == "SUCCESS") {
+	    		alert(data.message);
+	    		window.location.href='/'
+	    	}
+        },
+	    error: function() {
+	          console.log('통신실패!!');
+        }
+	})
+}
+
+window.addEventListener("load", function() {
+	// 이벤트 데이터 가져오기
+    $.ajax({
+        method: "GET",
+        url: "/goods/eventList",
+        success: function(eventData) {
+//         	console.log("이벤트 조회 성공 : ", eventData);
+        	createEventSlide(eventData);
+        },     
+        error: function() {
+            console.log('통신 실패!');
+        }
+    });
+    
+	// 아이템 데이터 가져오기
+	itemList();
+});
+
+function itemList(){
+    $.ajax({
+        method: "GET",
+        url: "/goods/itemList",
+        data: {
+        	sortType:sortType
+        },
+        success: function(itemData) {
+//         	console.log("아이템 조회 성공 : ", itemData);
+        	createCategorySlide(itemData);
+        },     
+        error: function() {
+            console.log('통신 실패!');
+        }
+    });  
+}
+
+// 정렬 버튼
+$('.sortBtn').click(function(){
+	sortType = $(this).val();
+// 	console.log("sortType 변경 확인 : " + sortType);
+	$('.item_totalContainer').empty();
+	itemList();
+})
+
+// 이벤트 슬라이드 생성
+function createEventSlide(eventData){
+	var eventSwiperWrapper = $('#eventSwiper');
+	// 이벤트 데이터를 반복하면서 슬라이드 생성
+    eventData.forEach(function (event) {
+    	var startDate = event.E_ST_DT.split('T')[0];
+    	var endDate = event.E_END_DT.split('T')[0];
+        var slide = '<div class="swiper-slide" id="event_' + event.E_ID + '" style="">' +
+    	    '<img class="thumbImg" src="' + event.E_IMG + '"/>' +
+            '<h2>' + event.E_NAME + '</h2>' +
+            '<p>' + startDate + '~' + endDate + '</p>' +
+            '<p>' + event.E_COMMENT + '</p>' +
+            '</div>';
+        eventSwiperWrapper.append(slide); // 슬라이드를 이벤트 스와이퍼에 추가
+    });
+	
+//     createSwiper('.swiper');
+    createSwiper('#event');
+}
+
+// 아이템 슬라이드 생성
+function createCategorySlide(itemData){
+	var categoryData = groupItemsByCategory(itemData);
+// 	console.log("확인 : ",categoryData); // 각각 배열에 잘 나눠져 들어오는지 확인 => OK
+	 categoryData.forEach(function (categoryItems) {
+// 		 console.log("확인2 : ", categoryItems);
+		 var contentsTotalDiv = $('.item_totalContainer');
+		 var contentsDiv = $('<div class="item_container"></div>');
+		 var swiperTitle = $('<div><h1>'+categoryItems.categoryName+'</h1></div>'); 	
+		 var swiperContainer = $('<div class="swiper" id="item_'+categoryItems.categoryName+'" style=""></div>');
+		 var swiperWrapper = $('<div class="swiper-wrapper"></div>');	
+		 var swiperPagination = $('<div class="swiper-pagination"></div>');
+		 var swiperPrevButton = $('<div class="swiper-button-prev"></div>');
+		 var swiperNextButton = $('<div class="swiper-button-next"></div>');
+    		categoryItems.items.forEach(function (item){
+				 var slide = '<div class="swiper-slide" id="item_' + item.G_ID + '">' + 
+			        '<img class="thumbImg" src="' + item.G_IMG + '"/>' +               
+			        '<h3>' + item.G_NAME + '</h3>';
+			        var G_PRICE = item.G_PRICE.toLocaleString();
+			        if (item.EG_PRICE) {
+				        var EG_PRICE = item.EG_PRICE.toLocaleString();
+			        	slide += '<p><del>' + G_PRICE + '원</del> <span style="font-weight: bold; color: red;">' + EG_PRICE + '원</span></p>';
+			        } else {
+			            slide += '<p>' + G_PRICE + '원</p>';
+			        }    
+			        slide += '</div>';                                                        
+			    swiperWrapper.append(slide);  
+			    swiperContainer.append(swiperWrapper,swiperPagination,swiperPrevButton,swiperNextButton);  
+    			})
+    			contentsDiv.append(swiperTitle, swiperContainer);
+    		    contentsTotalDiv.append(contentsDiv);
+//     		    createSwiper('.swiper'); // createSwiper 함수 호출
+    		    
+    		    createSwiper('#item_'+categoryItems.categoryName);
+    		    
+    		}
+	 
+	 )};
+
+// 카테고리별 배열에 담기
+function groupItemsByCategory(itemData) {
+	  var categoryData = [];
+	    var groupedData = [];
+	    itemData.forEach(function (item) {
+	        var category = item.G_CATE_CD;
+	        var categoryName = item.D_NAME;
+	        if (!groupedData[category]) {
+	            groupedData[category] = {
+	            	categoryName: categoryName,
+	                items: [],
+	            };
+	            categoryData.push(groupedData[category]);
+	        }
+	        groupedData[category].items.push(item);
+	    });
+	    return categoryData;
+}
+
+
+// 스와이퍼 생성
+function createSwiper(swipeContainer) {
+    var swiper = new Swiper(swipeContainer, {
+    	loop: true, // 슬라이드 반복 여부
+        slidesPerView: 3, // 한 번에 보여지는 슬라이드 개수
+        autoplay: {
+            delay: 2000, // 확인 때문에 3초로 변경
+            pauseOnMouseEnter: true, // 마우스 호버 시 일시 정지
+            disableOnInteraction: false, // 사용자 상호작용 후에도 자동 재생 유지
+        },
+        pagination: {
+		    el: '.swiper-pagination',
+		    clickable: true
+		  },
+		  navigation: {
+		    nextEl: '.swiper-button-next',
+		    prevEl: '.swiper-button-prev',
+		  }
+    });
+}
+
+// 선택한 아이템 상세 페이지 접근
+$(document).on('click', '.swiper-slide[id^="item_"]', function() {
+    var slideId = $(this).attr('id').substring(5);
+//     console.log("클릭한 슬라이드의 id:", slideId);
+    window.location.href = '/goods/detail?gId=' + slideId;  
+});
+
+
+// 선택한 이벤트 상세 페이지 접근
+$(document).on('click', '.swiper-slide[id^="event_"]', function() {
+    var eId = $(this).attr('id').substring(6);
+    console.log("클릭한 이벤트의 id:", eId);
+    window.location.href = '/goods/eventItemList?eId=' + eId;  
+});
+
+
+
+</script>
+
+</html>

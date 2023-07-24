@@ -1,0 +1,78 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>회원관리</title>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/redmond/jquery-ui.css" type="text/css" />
+<!-- jqGrid CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+<!-- The actual JQuery code -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
+<!-- The JQuery UI code -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" /></script>
+<!-- The jqGrid language file code-->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/i18n/grid.locale-kr.js" /></script>
+<!-- The atual jqGrid code -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.src.js" /></script>
+<script>
+
+$(document).ready(function() {
+	var postData = JSON.stringify($("#searchForm").serializeObject());
+	
+	$("#memberList").jqGrid({
+		url: '/admin/memberList',
+		datatype: 'JSON',
+		postData: postData,
+		mtype: 'POST',
+		colNames: ['아이디', '비밀번호', '회원명', '폰번호', '주소기본', '주소상세', '삭제여부', '회원타입', '수정일시', '가입일시'],
+		colModel: [
+			{name: 'm_id', index: 'm_id', width: 100, align: 'center', sortable: false},
+			{name: 'm_pass', index: 'm_pass', width: 100, align: 'center'},
+			{name: 'm_name', index: 'm_name', width: 100, align: 'center'},
+			{name: 'm_mobile', index: 'm_mobile', width: 100, align: 'center'},
+			{name: 'm_add_default', index: 'm_add_default', width: 100, align: 'center'},
+			{name: 'm_add_detail', index: 'm_add_detail', width: 100, align: 'center'},
+			{name: 'm_del_yn', index: 'm_del_yn', width: 100, align: 'center'},
+			{name: 'm_type', index: 'm_type', width: 100, align: 'center'},
+			{name: 'modify_dt', index: 'modify_dt', width: 100, align: 'center'},
+			{name: 'reg_dt', index: 'reg_dt', width: 100, align: 'center'}
+		],
+		autowidth: true,
+		rownumbers: true,
+		multiselect: true,
+		pager: '#pager',
+		rowNum: 10,
+		rowList: [10, 20, 30],
+		sortname: 'm_id',
+		sortorder: 'asc',
+		height: 250,
+		width: 1020
+	});
+});
+</script>
+</head>
+<body>
+<div>
+	<div>
+		<form id="searchForm">
+			<table>
+				<tr>
+					<td>회원명</td>
+					<td><input type="text" name="m_name"></td>
+					<td>폰번호</td>
+					<td><input type="number" name="m_mobile"></td>
+					<td>회원타입</td>
+					<td><input type="text" name="m_type"></td>
+				</tr>
+			</table>
+			<button>조회</button>
+		</form>
+		<button>회원등록</button>
+	</div>
+	<table id="memberList"></table>
+	<div id="pager"></div>
+</div>
+</body>
+</html>

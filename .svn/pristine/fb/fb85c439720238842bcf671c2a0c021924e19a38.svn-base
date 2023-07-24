@@ -1,0 +1,184 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- swiper 라이브러리-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+</head>
+<style>
+.swiper {
+  border: solid 4px orange;
+  width: 1024px;
+  height: 400px;
+  margin-bottom:100px;
+  position: relative;
+}
+
+.swiper-slide{
+	text-align:center;
+}
+
+.swiper-slide img{
+	margin-top:20px;
+	width:200px;
+	height:180px;
+}
+
+.swiper-button-prev, .swiper-button-next {
+    position: absolute; /* 버튼들의 위치를 설정하기 위해 절대 위치로 설정 */
+    top: 50%; /* 컨테이너의 중앙에 위치하도록 설정 */
+    transform: translateY(-50%); /* 세로 중앙 정렬 */
+    z-index: 10; /* 버튼들을 슬라이드 위에 표시하기 위해 겹침 순서를 설정 */
+    background-color: rgba(255, 255, 255, 0.5); /* 버튼 배경 색상 설정 */
+    padding: 10px; /* 버튼 패딩 설정 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  }
+</style>
+
+<body>
+<div class="event_container">
+	<div><h1>이벤트</h1></div>
+	<!-- Slider main container -->
+	<div class="swiper">
+	  <div class="swiper-wrapper"></div>
+	  <div class="swiper-pagination"></div>
+	  <div class="swiper-button-prev"></div>
+	  <div class="swiper-button-next"></div>
+	</div>
+</div>
+
+<div class="item_totalContainer"></div>
+
+</body>
+<script type="text/javascript">
+	var sortType = "latestReg"; // 최근등록순
+	window.addEventListener("load", function() {
+		// 이벤트 데이터 가져오기
+			$.ajax({
+			      method: "GET",
+			      url: "/goods/eventList",
+			      success: function(eventData) {
+			    	console.log("이벤트 조회 성공 : ", eventData);
+			      	createEventSlide(eventData);
+			      },     
+			      error: function() {
+			          console.log('통신 실패!');
+			      }
+			  });
+		
+		// 아이템 데이터 가져오기
+			$.ajax({
+			    method: "GET",
+			    url: "/goods/itemList",
+			    data: {
+			    	sortType:sortType
+			    },
+			    success: function(itemData) {
+			    	console.log("아이템 조회 성공 : ", itemData);
+			    	createCategorySlide(itemData);
+			    },     
+			    error: function() {
+			        console.log('통신 실패!');
+			    }
+			}); 
+	});
+	
+	// 이벤트 슬라이드 생성
+	function createEventSlide(eventData){
+		var eventSwiperWrapper = $('.swiper .swiper-wrapper');
+		// 이벤트 데이터를 반복하면서 슬라이드 생성
+	    eventData.forEach(function (event) {
+	    	var startDate = event.E_ST_DT.split('T')[0];
+	    	var endDate = event.E_END_DT.split('T')[0];
+	        var slide = '<div class="swiper-slide" id="event_' + event.E_ID + '" style="">' +
+	    	    '<img class="thumbImg" src="' + event.E_IMG + '"/>' +
+	            '<h2>' + event.E_NAME + '</h2>' +
+	            '<p>' + startDate + '~' + endDate + '</p>' +
+	            '</div>';
+	        eventSwiperWrapper.append(slide); // 슬라이드를 이벤트 스와이퍼에 추가
+	    });
+	     createSwiper('.swiper');
+	}
+	
+	// 아이템 슬라이드 생성
+	function createCategorySlide(itemData){
+		var categoryData = groupItemsByCategory(itemData);
+		console.log("확인 : ",categoryData); // 각각 배열에 잘 나눠져 들어오는지 확인 => OK
+		 categoryData.forEach(function (categoryItems) {
+			 console.log("확인2 : ", categoryItems);
+			 var contentsTotalDiv = $('.item_totalContainer');
+			 var contentsDiv = $('<div id="item_container_'+categoryItems.categoryName+'"></div>');
+			 var swiperTitle = $('<div><h1>'+categoryItems.categoryName+'</h1></div>'); 	
+			 var swiperContainer = $('<div class="swiper"></div>');
+			 var swiperWrapper = $('<div class="swiper-wrapper"></div>');	
+			 var swiperPagination = $('<div class="swiper-pagination"></div>');
+			 var swiperPrevButton = $('<div class="swiper-button-prev"></div>');
+			 var swiperNextButton = $('<div class="swiper-button-next"></div>');
+	    		categoryItems.items.forEach(function (item){
+					 var slide = '<div class="swiper-slide" id="item_' + item.G_ID + '">' + 
+				        '<img class="thumbImg" src="' + item.G_IMG + '"/>' +               
+				        '<h3>' + item.G_NAME + '</h3>' +                                   
+				        '<p>' + item.G_PRICE + '원</p>' +                                   
+				        '</div>';                                                          
+				    swiperWrapper.append(slide);  
+				    swiperContainer.append(swiperWrapper,swiperPagination,swiperPrevButton,swiperNextButton);  
+	    			})
+	    			contentsDiv.append(swiperTitle, swiperContainer);
+	    		    contentsTotalDiv.append(contentsDiv);
+	    		    createSwiper('.swiper'); // createSwiper 함수 호출
+	    		}
+		 
+		 )};
+	    		                                             
+		
+	
+	// 카테고리별 배열에 담기
+	function groupItemsByCategory(itemData) {
+		  var categoryData = [];
+		    var groupedData = [];
+		    itemData.forEach(function (item) {
+		        var category = item.G_CATE_CD;
+		        var categoryName = item.D_NAME;
+		        if (!groupedData[category]) {
+		            groupedData[category] = {
+		            	categoryName: categoryName,
+		                items: [],
+		            };
+		            categoryData.push(groupedData[category]);
+		        }
+		        groupedData[category].items.push(item);
+		    });
+		    return categoryData;
+	}
+	
+	// 스와이퍼 생성
+	function createSwiper(swipeContainer) {
+	    var swiper = new Swiper(swipeContainer, {
+	    	loop: true, // 슬라이드 반복 여부
+	        slidesPerView: 3, // 한 번에 보여지는 슬라이드 개수
+	        autoplay: {
+	            delay: 3000, // 확인 때문에 3초로 변경
+// 	            pauseOnMouseEnter: true, // 마우스 호버 시 일시 정지
+	        },
+	        pagination: {
+			    el: '.swiper-pagination',
+			    clickable: true
+			  },
+			  navigation: {
+			    nextEl: '.swiper-button-next',
+			    prevEl: '.swiper-button-prev',
+			  }
+//	      loopAdditionalSlides : 1,
+	    });
+	}
+	
+	// 선택한 슬라이드 상세 페이지 접근
+	$(document).on('click', '.swiper-slide', function() {
+	    var slideId = $(this).attr('id').substring(5);
+	    console.log("클릭한 슬라이드의 id:", slideId);
+	    
+	});
+</script>
