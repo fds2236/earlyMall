@@ -139,22 +139,49 @@ window.addEventListener("load", function() {
 	itemList();
 });
 
+// 기존의 방식(요청이 itemList?sortType=lasterReg로 들어감)
+// function itemList(){
+// 	console.log("sortType : " + sortType);
+//     $.ajax({
+//         method: "GET",
+//         url: "/goods/itemList",
+// 	    data: {
+// 	        	sortType:sortType
+// 	        },
+//         success: function(itemData) {
+// //         	console.log("아이템 조회 성공 : ", itemData);
+//         	createCategorySlide(itemData);
+//         },     
+//         error: function() {
+//             console.log('통신 실패!');
+//         }
+//     });  
+// }
+
+// restApi 방식(요청이 sortType 즉, latestReg로 들어감)
 function itemList(){
+	console.log("sortType : " + sortType);
     $.ajax({
         method: "GET",
-        url: "/goods/itemList",
-        data: {
-        	sortType:sortType
-        },
+        url: "/goods/itemList/"+ sortType,
+        dataType:"json", 
+        // dataType => 서버로부터 받은 응답 데이터를 JSON 형식으로 처리
+        // data => AJAX 요청을 보낼 때 요청 데이터를 설정하는 것 => 여기서는 지금 없어야함
+        // 여기서 data가 있으면 url이 latestReg?sortType=latestReg 이렇게 요청들어감
+// 	    data: {
+// 	        	sortType:sortType
+// 	        },
         success: function(itemData) {
-//         	console.log("아이템 조회 성공 : ", itemData);
         	createCategorySlide(itemData);
         },     
         error: function() {
             console.log('통신 실패!');
         }
-    });  
+    });   
 }
+
+
+
 
 // 정렬 버튼
 $('.sortBtn').click(function(){

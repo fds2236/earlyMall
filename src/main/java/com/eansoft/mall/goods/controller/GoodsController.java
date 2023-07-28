@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,8 @@ public class GoodsController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@GetMapping("/cate")
+	// Model model은 단순히 뷰로 데이터를 전달하기 위해 사용되는 매개변수
 	public String cateMain(@RequestParam String cateId, Model model) {	
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("gCateCd", cateId);
 		map.put("sortType", "newest");
@@ -111,20 +112,27 @@ public class GoodsController {
 	
 	@GetMapping("/eventItemList")
 	public String eventItemList(
-			@RequestParam(value="eId")String eId,
-			Model model){
+			@RequestParam(value="eId")String eId, Model model){
 		List<Map<String, Object>> eventItemList = goodsService.getEventItemList(eId);
 		model.addAttribute("eventItemList", eventItemList);
 		return "goods/eventItemList";
 	}
 	
-	@GetMapping("/itemList")
+	// 이게 기존의 방식
+//	@GetMapping("/itemList")
+//	@ResponseBody
+//	public List<Map<String, Object>> itemList(
+//			@RequestParam(value="sortType")String sortType){
+//		return goodsService.getItemList(sortType);
+//	}
+	
+	// restApi의 방식
+	@GetMapping("/itemList/{sortType}")
 	@ResponseBody
 	public List<Map<String, Object>> itemList(
-			@RequestParam(value="sortType")String sortType){
+			@PathVariable String sortType){
 		return goodsService.getItemList(sortType);
 	}
-	
 	
 	//카테고리별 상품 목록 -tr
 	@GetMapping("/CateGoodsList")
