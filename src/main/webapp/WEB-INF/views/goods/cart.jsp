@@ -425,6 +425,10 @@ function saveAll() {
 	firstQtyUpdate(saveList); // 초기값 업데이트 함수
 }
 
+// 지금 구분안되는게 data, contentType, dataType
+// data는 서버로 보내는 값
+// contentType는 서버로 보내는 데이터 형식
+// dataType은 서버에서 받아올 데이터의 형식
 function saveAction(saveList){
 	$.ajax({
 		url: "/goods/basketListUpdate",
