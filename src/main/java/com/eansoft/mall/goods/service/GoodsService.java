@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface  GoodsService {
-//	Map<String, Object> getBasketList(String m_id, String sortType, int page);
 	Map<String, Object> getBasketList(Map<String, Object> map);
 	boolean getBasketCheck(String mId, String gId);
 	int getBasketAdd(Map<String, Object> map);

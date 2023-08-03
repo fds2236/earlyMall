@@ -15,7 +15,7 @@
 .cart_container {
 	padding: 10px;
 	margin: 0px auto;
-/* 	border: 2px solid rgb(91, 155, 213); */
+	/* 	border: 2px solid rgb(91, 155, 213); */
 }
 
 .cart_item {
@@ -77,7 +77,7 @@
 	cursor: pointer
 }
 
-.functionBtn, .orderBtn{
+.functionBtn, .orderBtn {
 	font-size: 13px;
 	margin: auto 0;
 	width: 85px;
@@ -102,8 +102,8 @@
 
 .thumbImg {
 	width: 100%;
-	height: 100%;
-	cursor: pointer;
+ 	height: 100%; 
+ 	cursor: pointer; 
 }
 
 #topBtn {
@@ -158,18 +158,18 @@
 </head>
 <body>
 
-	<jsp:include page="../import/mainFrame.jsp"/>
-	
+	<jsp:include page="../import/mainFrame.jsp" />
+
 	<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 	<div class="container">
-	<div class="sort_container">
-		<button class="sortBtn" value="lowPrice">낮은가격순</button>
-		<button class="sortBtn" value="highPrice">높은가격순</button>
-		<button class="sortBtn" value="latestReg">최신순</button>
-	</div>
-	<div class="cart_container"></div>
-	<button id="topBtn" onclick="scrollToTop()">Top</button>
+		<div class="sort_container">
+			<button class="sortBtn" value="lowPrice">낮은가격순</button>
+			<button class="sortBtn" value="highPrice">높은가격순</button>
+			<button class="sortBtn" value="latestReg">최신순</button>
+		</div>
+		<div class="cart_container"></div>
+		<button id="topBtn" onclick="scrollToTop()">Top</button>
 	</div>
 	<script>
 var mId = "${memberInfo.mId}";
@@ -224,13 +224,14 @@ function basketList(mId) {
 	  console.log("|sortType: " + sortType);
 	  console.log("|currPage: " + currPage);
 	$.ajax({
-		url: "/goods/basketList",
+// 		url: "/goods/basketList",
+		url: "/goods/basketList/"+mId+ "/" +sortType+ "/" +currPage,
 		type: "GET",
-		data: {
-			mId: mId,
-	        sortType: sortType,
-			page: currPage
-		},
+// 		data: {
+// 			mId: mId,
+// 	        sortType: sortType,
+// 			page: currPage
+// 		},
 		success: function(data) {
 			 console.log("|조회끝");
 	    	  var dataList = data.dataList;

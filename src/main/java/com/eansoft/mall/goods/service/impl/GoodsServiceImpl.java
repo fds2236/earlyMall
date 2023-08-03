@@ -44,6 +44,8 @@ public class GoodsServiceImpl implements GoodsService {
 	    resultMap.put("totalPages", totalPages);
 		return resultMap;
 	}
+	
+
 
 	@Override
 	public boolean getBasketCheck(String mId, String gId) {
@@ -52,6 +54,7 @@ public class GoodsServiceImpl implements GoodsService {
 			return true;
 		} else return false;
 	}
+
 
 	@Override
 	public int getBasketAdd(Map<String, Object> map) {
